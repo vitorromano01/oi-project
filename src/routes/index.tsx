@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
     ],
   }),
   validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" | "passeios" } =>
-    search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "passeios" ? { aba: search["aba"] as "restaurantes" | "praias" | "operadors" } : {},
+    search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "passeios" ? { aba: search["aba"] as "restaurantes" | "praias" | "passeios" } : {},
   component: Index,
 });
 
@@ -162,7 +162,6 @@ function Index() {
                 {title:"Praias e piscinas",detail:"Praias, piscinas naturais e melhores horários",icon:Waves,tone:"blue",count:"Lugares para conhecer"},
                 {title:"Passeios",detail:"Experiências, buggy, jangada e aventuras",icon:MapPinned,tone:"green",count:"Experiências"},
                 {title:"Cafés e lojinhas",detail:"Cafés, sobremesas, feirinhas e compras",icon:Coffee,tone:"gold",count:"Achadinhos"},
-                {title:"Passeios e experiências",detail:"Passeios, jangadas, mergulho e experiências",icon:Heart,tone:"green",count:"Operadores e experiências"},
               ].map((category) => {
                 const Icon = category.icon;
                 const cardClass = "rounded-[23px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md";
@@ -174,7 +173,7 @@ function Index() {
                   <div className="mt-4 flex items-center justify-between border-t border-[#f0eee8] pt-3"><span className="text-[10px] font-bold text-[#9aa49b]">{category.count}</span><span className="text-[#32958a]"><ArrowUpRight size={16}/></span></div>
                   </>
                 );
-                if (category.title === "Restaurantes" || category.title === "Praias e piscinas" || category.title === "Passeios e experiências") {
+                if (category.title === "Restaurantes" || category.title === "Praias e piscinas" || category.title === "Passeios") {
                   const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : "parceiros";
                   return <Link key={category.title} to="/" search={{ aba: targetTab }} className={cardClass}>{cardBody}</Link>;
                 }
