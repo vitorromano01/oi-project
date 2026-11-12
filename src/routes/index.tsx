@@ -52,6 +52,32 @@ function Index() {
   const [savedMoney, setSavedMoney] = useState(0);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [focusChildChecklist, setFocusChildChecklist] = useState(false);
+  const [infoFields, setInfoFields] = useState({
+    hotelName: "",
+    hotelAddress: "",
+    hotelPhone: "",
+    checkIn: "14/02/2027",
+    checkOut: "19/02/2027",
+    airline: "",
+    outboundFlight: "",
+    outboundTime: "",
+    returnFlight: "",
+    returnTime: "",
+    bookingCode: "",
+    originAirport: "Aeroporto de Confins (CNF) — Belo Horizonte",
+    destinationAirport: "Aeroporto do Recife (REC)",
+    rentalCompany: "",
+    carModel: "",
+    carPickup: "Aeroporto do Recife",
+    carPickupTime: "",
+    carReturnTime: "",
+    carBooking: "",
+    transfer: "A definir",
+    insurance: "",
+    wifi: "",
+    notes: "",
+  });
+  const updateInfo = (key: keyof typeof infoFields, value: string) => setInfoFields((current) => ({ ...current, [key]: value }));
   useEffect(() => {
     if (activeSection === "Checklist" && focusChildChecklist) {
       document.getElementById("checklist-crianca")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -194,6 +220,88 @@ function Index() {
 
           </div>
           )
+        ) : activeSection === "Informações" ? (
+          <div className="space-y-6">
+            <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
+              <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full border border-white/15" />
+              <div className="relative z-10 max-w-2xl">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Luggage size={13}/> Guia da viagem</span>
+                <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Informações importantes</h2>
+                <p className="mt-2 max-w-xl text-sm leading-6 text-[#d9f1e8]">Tudo o que vocês precisam consultar durante a viagem, com os dados já confirmados e campos para completar os detalhes das reservas.</p>
+              </div>
+            </section>
+
+            <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="rounded-[20px] border border-[#eae4d8] bg-white p-4"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Destino</p><p className="mt-1 text-sm font-extrabold text-[#234442]">Porto de Galinhas</p><p className="mt-1 text-[10px] text-[#89968d]">Ipojuca · Pernambuco</p></div>
+              <div className="rounded-[20px] border border-[#eae4d8] bg-white p-4"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Período</p><p className="mt-1 text-sm font-extrabold text-[#234442]">14 a 19/02/2027</p><p className="mt-1 text-[10px] text-[#89968d]">6 dias · 5 noites</p></div>
+              <div className="rounded-[20px] border border-[#eae4d8] bg-white p-4"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Viajantes</p><p className="mt-1 text-sm font-extrabold text-[#234442]">4 pessoas</p><p className="mt-1 text-[10px] text-[#89968d]">3 adultos + 1 criança</p></div>
+              <div className="rounded-[20px] border border-[#dcebe0] bg-[#f3faf4] p-4"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#609477]">Reservas</p><p className="mt-1 text-sm font-extrabold text-[#347a58]">Pagas</p><p className="mt-1 text-[10px] text-[#7e9c89]">Hotel e passagens aéreas</p></div>
+            </section>
+
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f5f2] text-[#258b86]"><MapPin size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Hospedagem</h3><p className="text-xs text-[#89968d]">Hotel reservado e pago · café da manhã incluído</p></div></div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="text-xs font-bold text-[#49635b]">Nome do hotel<input value={infoFields.hotelName} onChange={(e)=>updateInfo("hotelName",e.target.value)} placeholder="Digite o nome do hotel" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Telefone / WhatsApp<input value={infoFields.hotelPhone} onChange={(e)=>updateInfo("hotelPhone",e.target.value)} placeholder="(00) 00000-0000" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b] sm:col-span-2">Endereço completo<input value={infoFields.hotelAddress} onChange={(e)=>updateInfo("hotelAddress",e.target.value)} placeholder="Rua, número, bairro e cidade" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Check-in<input value={infoFields.checkIn} onChange={(e)=>updateInfo("checkIn",e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Check-out<input value={infoFields.checkOut} onChange={(e)=>updateInfo("checkOut",e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <a href="https://www.google.com/maps/search/?api=1&query=Porto+de+Galinhas+Ipojuca+PE" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-[#e6f5f2] px-3 py-2.5 text-xs font-extrabold text-[#258b86]"><MapPinned size={14}/> Mapa do destino <ArrowUpRight size={13}/></a>
+                {infoFields.hotelAddress.trim() && <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(infoFields.hotelAddress)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-[#e6f5f2] px-3 py-2.5 text-xs font-extrabold text-[#258b86]">Ver hotel no mapa <ArrowUpRight size={13}/></a>}
+                {infoFields.hotelPhone.trim() && <a href={`https://wa.me/${infoFields.hotelPhone.replace(/\\D/g,"")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-[#e6f5f2] px-3 py-2.5 text-xs font-extrabold text-[#258b86]">WhatsApp do hotel <ArrowUpRight size={13}/></a>}
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff4df] text-[#b78354]"><Plane size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Voos e deslocamentos</h3><p className="text-xs text-[#89968d]">Passagens reservadas e pagas · origem informada: Confins</p></div></div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="text-xs font-bold text-[#49635b]">Aeroporto de origem<input value={infoFields.originAirport} onChange={(e)=>updateInfo("originAirport",e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Aeroporto de chegada<input value={infoFields.destinationAirport} onChange={(e)=>updateInfo("destinationAirport",e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Companhia aérea<input value={infoFields.airline} onChange={(e)=>updateInfo("airline",e.target.value)} placeholder="Nome da companhia" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Localizador da passagem<input value={infoFields.bookingCode} onChange={(e)=>updateInfo("bookingCode",e.target.value)} placeholder="Código da reserva" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Voo de ida<input value={infoFields.outboundFlight} onChange={(e)=>updateInfo("outboundFlight",e.target.value)} placeholder="Número do voo" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Horário de saída / chegada<input value={infoFields.outboundTime} onChange={(e)=>updateInfo("outboundTime",e.target.value)} placeholder="Ex.: 08:00 / 11:00" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Voo de volta<input value={infoFields.returnFlight} onChange={(e)=>updateInfo("returnFlight",e.target.value)} placeholder="Número do voo" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Horário da volta<input value={infoFields.returnTime} onChange={(e)=>updateInfo("returnTime",e.target.value)} placeholder="Horário de saída / chegada" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f5f2] text-[#258b86]"><Luggage size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Carro alugado</h3><p className="text-xs text-[#89968d]">Retirada planejada no aeroporto do Recife · reserva a confirmar</p></div></div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="text-xs font-bold text-[#49635b]">Locadora<input value={infoFields.rentalCompany} onChange={(e)=>updateInfo("rentalCompany",e.target.value)} placeholder="Nome da locadora" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Modelo / categoria<input value={infoFields.carModel} onChange={(e)=>updateInfo("carModel",e.target.value)} placeholder="Modelo ou categoria reservada" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Local de retirada<input value={infoFields.carPickup} onChange={(e)=>updateInfo("carPickup",e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Horário de retirada<input value={infoFields.carPickupTime} onChange={(e)=>updateInfo("carPickupTime",e.target.value)} placeholder="A definir" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Horário de devolução<input value={infoFields.carReturnTime} onChange={(e)=>updateInfo("carReturnTime",e.target.value)} placeholder="A definir" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Código da reserva<input value={infoFields.carBooking} onChange={(e)=>updateInfo("carBooking",e.target.value)} placeholder="Código da locação" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff4df] text-[#b78354]"><Heart size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Contatos e cuidados</h3><p className="text-xs text-[#89968d]">Deixe os contatos úteis reunidos para consultar rapidamente</p></div></div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="text-xs font-bold text-[#49635b]">Seguro viagem / assistência<input value={infoFields.insurance} onChange={(e)=>updateInfo("insurance",e.target.value)} placeholder="Seguradora, telefone e apólice" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+                <label className="text-xs font-bold text-[#49635b]">Wi-Fi da hospedagem<input value={infoFields.wifi} onChange={(e)=>updateInfo("wifi",e.target.value)} placeholder="Rede e senha (opcional)" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+              </div>
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl bg-[#fcfbf8] p-3"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Polícia</p><a href="tel:190" className="mt-1 block text-lg font-black text-[#234442]">190</a></div>
+                <div className="rounded-xl bg-[#fcfbf8] p-3"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">SAMU</p><a href="tel:192" className="mt-1 block text-lg font-black text-[#234442]">192</a></div>
+                <div className="rounded-xl bg-[#fcfbf8] p-3"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Bombeiros</p><a href="tel:193" className="mt-1 block text-lg font-black text-[#234442]">193</a></div>
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3eee5] text-[#98764d]"><Bookmark size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Observações pessoais</h3><p className="text-xs text-[#89968d]">Anotações livres para lembrar durante a viagem</p></div></div>
+              <textarea value={infoFields.notes} onChange={(e)=>updateInfo("notes",e.target.value)} rows={4} placeholder="Anote aqui recomendações, lembretes, detalhes ou qualquer informação importante..." className="mt-4 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm leading-6 outline-none focus:border-[#32958a]"/>
+              <label className="mt-4 block text-xs font-bold text-[#49635b]">Transfer Recife ↔ Porto de Galinhas<input value={infoFields.transfer} onChange={(e)=>updateInfo("transfer",e.target.value)} placeholder="A definir / detalhes do transfer" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
+            </section>
+
+            <div className="rounded-2xl border border-[#f0e4d8] bg-[#fff8f0] p-4 text-xs leading-5 text-[#8c765e]"><strong>Importante:</strong> os campos em branco são dados de reserva que ainda não foram informados. Hotel e passagens já estão reservados e pagos; o café da manhã está incluído. O aluguel do carro está planejado para retirada no aeroporto do Recife, mas os dados da locadora ainda precisam ser preenchidos. As informações digitadas ficam nesta sessão do navegador até a implementação da sincronização e persistência.</div>
+            <button type="button" onClick={() => setActiveSection("Visão geral")} className="rounded-xl bg-[#167d70] px-4 py-2.5 text-xs font-extrabold text-white">Voltar à visão geral</button>
+          </div>
         ) : activeSection === "Carro alugado" ? (
           <div className="space-y-6">
             <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
