@@ -143,15 +143,150 @@ function Index() {
               })}
             </div>
 
-            <section className="rounded-[26px] border border-[#eae4d8] bg-white p-6 shadow-sm sm:p-8">
-              <div className="mx-auto flex max-w-lg flex-col items-center text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e6f5f2] text-[#258b86]"><Heart size={25}/></span>
-                <h3 className="mt-4 text-xl font-extrabold text-[#1d4140]">Suas dicas começam aqui</h3>
-                <p className="mt-2 text-sm leading-6 text-[#87958a]">Este será o cantinho para reunir recomendações que vocês encontrarem: nome do lugar, endereço, faixa de preço, link, observações e o que vale a pena pedir ou fazer.</p>
-                <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#f2f8f5] px-4 py-3 text-xs font-bold text-[#43816e]"><Plus size={15}/> Cadastro de dicas será adicionado nesta área</div>
+            <section className="rounded-[26px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div><div className="flex items-center gap-2 text-[#32958a]"><Utensils size={17}/><span className="text-[10px] font-extrabold uppercase tracking-[.16em]">Lista de restaurantes</span></div><h3 className="mt-2 text-xl font-extrabold text-[#1d4140]">15 lugares para conhecer</h3><p className="mt-1 text-xs leading-5 text-[#87958a]">Opções reunidas para vocês escolherem onde comer durante a viagem.</p></div>
+                <span className="w-fit rounded-full bg-[#e6f5f2] px-3 py-1.5 text-xs font-bold text-[#258b86]">15 sugestões salvas</span>
               </div>
             </section>
-            <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Área preparada para organizar recomendações da viagem. Nenhuma dica foi cadastrada ainda.</p>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <article key="0" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 1</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Minha Praia</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,9/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Frutos do mar e cozinha brasileira contemporânea, com drinks e ambiente temático descontraído.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Rua dos Navegantes</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Jantar a dois</span>
+              </article>
+              <article key="1" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 2</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Barraca</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,9/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Cozinha brasileira, frutos do mar e pratos regionais com apresentação especial.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Rua Esperança</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Ambiente charmoso</span>
+              </article>
+              <article key="2" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 3</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Domingos Restaurante</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,3/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Opção sofisticada com frutos do mar, massas e ambiente romântico.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Rua Beijupirá</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Noite especial</span>
+              </article>
+              <article key="3" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 4</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Beijupirá</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,5/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Gastronomia regional criativa, peixes, camarões e combinações com frutas tropicais.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Rua Beijupirá</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Experiência gastronômica</span>
+              </article>
+              <article key="4" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 5</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Varanda's Restaurante</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,9/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Camarões, pratos bem servidos e localização próxima ao mar.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Rua das Piscinas Naturais</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Vista para o mar</span>
+              </article>
+              <article key="5" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 6</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Barcaxeira</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,4/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Famoso pela macaxeira gratinada e escondidinhos, com porções generosas.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Comida regional</span>
+              </article>
+              <article key="6" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 7</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Império do Camarão</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,9/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Especializado em camarão, com rodízio e diversas preparações.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Recife (confirmar deslocamento)</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Fora de Porto de Galinhas</span>
+              </article>
+              <article key="7" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 8</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Toca das Galinhas</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,9/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Comida nordestina, peixes e pratos tradicionais.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Ipojuca</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Culinária regional</span>
+              </article>
+              <article key="8" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 9</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Farofa Fina</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,5/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Culinária nordestina, ambiente temático e possibilidade de música ao vivo.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Música ao vivo</span>
+              </article>
+              <article key="9" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 10</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Peixe na Telha</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,2/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Frutos do mar e culinária brasileira perto das piscinas naturais.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Perto das piscinas naturais</span>
+              </article>
+              <article key="10" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 11</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">La Tratoria</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,5/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Cozinha italiana, massas artesanais e molhos tradicionais.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Alternativa aos frutos do mar</span>
+              </article>
+              <article key="11" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 12</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">De Boa Pizzas Artesanais</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,8/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Pizza artesanal, ingredientes caprichados e ambiente descontraído.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Pizza</span>
+              </article>
+              <article key="12" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 13</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Caldinho do Nenen</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,5/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Caldinho, frutos do mar, petiscos e pratos brasileiros.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Petiscos</span>
+              </article>
+              <article key="13" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 14</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">Muro Alto Bistrô</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,5/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Proposta contemporânea com peixes e pratos elaborados.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Muro Alto</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Bistrô</span>
+              </article>
+              <article key="14" className="rounded-[22px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Restaurante 15</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">COTI Restaurante</h3></div>
+                  <span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ 4,2/5</span>
+                </div>
+                <p className="mt-3 min-h-[60px] text-xs leading-5 text-[#788b80]">Petiscos, camarões, pratos brasileiros e drinks.</p>
+                <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>Porto de Galinhas</div>
+                <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">Descontraído</span>
+              </article>
+            </div>
+            <p className="px-1 text-[10px] leading-5 text-[#9aa399]">As avaliações, descrições e endereços foram registrados conforme as informações enviadas e podem mudar. Confirme localização, funcionamento, preços e avaliações atualizadas antes de ir. O Império do Camarão foi indicado em Recife, então vale conferir se faz sentido incluir no roteiro.</p>
           </div>
         ) : activeSection === "Checklist" ? (
           <div className="space-y-6">
