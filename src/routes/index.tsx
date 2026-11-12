@@ -166,7 +166,6 @@ function Index() {
               })}
             </div>
 
-            <RestaurantsPanel />
           </div>
           )
         ) : activeSection === "Checklist" ? (
