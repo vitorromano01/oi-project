@@ -4,7 +4,7 @@ import {
   ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronRight,
   CircleDollarSign, Clock3, Compass, Luggage, MapPin, Palmtree,
   Plane, Sparkles, Users, Wallet, Waves, ClipboardCheck, Sun,
-  Camera, Umbrella, Menu, MoreHorizontal, Moon, PiggyBank,
+  Camera, Umbrella, Menu, MoreHorizontal, Moon, PiggyBank, Bookmark, Utensils, MapPinned, Compass as CompassIcon, Coffee, Heart, Plus,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -23,6 +23,7 @@ const navigation = [
   { label: "Roteiro", icon: CalendarDays },
   { label: "Checklist", icon: ClipboardCheck },
   { label: "Informações", icon: Luggage },
+  { label: "Dicas", icon: Bookmark },
 ];
 
 const pending = [
@@ -112,6 +113,46 @@ function Index() {
             <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Os valores são editáveis nesta tela, mas ainda ficam apenas nesta sessão do navegador. A gravação permanente e a sincronização serão implementadas na etapa de persistência.</p>
           </div>
 
+        ) : activeSection === "Dicas" ? (
+          <div className="space-y-6">
+            <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
+              <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full border border-white/15" />
+              <div className="absolute -bottom-24 right-[18%] h-56 w-56 rounded-full bg-[#f5bd75]/15 blur-sm" />
+              <div className="relative z-10 max-w-2xl">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Bookmark size={13}/> Cantinhos para descobrir</span>
+                <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Boas dicas fazem a viagem.</h2>
+                <p className="mt-2 max-w-xl text-sm leading-6 text-[#d9f1e8]">Guarde aqui restaurantes, praias, passeios e lugares especiais que vocês não querem deixar de conhecer em Porto de Galinhas.</p>
+              </div>
+              <span className="absolute bottom-6 right-7 hidden rotate-[-10deg] text-7xl opacity-20 sm:block">✦</span>
+            </section>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {title:"Restaurantes",detail:"Onde comer bem, preços e pratos favoritos",icon:Utensils,tone:"coral",count:"Ideias para salvar"},
+                {title:"Praias e piscinas",detail:"Praias, piscinas naturais e melhores horários",icon:Waves,tone:"blue",count:"Lugares para conhecer"},
+                {title:"Passeios",detail:"Experiências, buggy, jangada e aventuras",icon:MapPinned,tone:"green",count:"Experiências"},
+                {title:"Cafés e lojinhas",detail:"Cafés, sobremesas, feirinhas e compras",icon:Coffee,tone:"gold",count:"Achadinhos"},
+              ].map((category) => {
+                const Icon = category.icon;
+                return <section key={category.title} className="rounded-[23px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${category.tone==="coral"?"bg-[#ffede5] text-[#d77956]":category.tone==="blue"?"bg-[#e5f3f4] text-[#328e94]":category.tone==="green"?"bg-[#e4f2e7] text-[#468b63]":"bg-[#fff2dc] text-[#bd8438]"}`}><Icon size={20}/></div>
+                  <h3 className="mt-4 text-base font-extrabold text-[#234442]">{category.title}</h3>
+                  <p className="mt-1 min-h-10 text-xs leading-5 text-[#89968d]">{category.detail}</p>
+                  <div className="mt-4 flex items-center justify-between border-t border-[#f0eee8] pt-3"><span className="text-[10px] font-bold text-[#9aa49b]">{category.count}</span><span className="text-[#32958a]"><ArrowUpRight size={16}/></span></div>
+                </section>;
+              })}
+            </div>
+
+            <section className="rounded-[26px] border border-[#eae4d8] bg-white p-6 shadow-sm sm:p-8">
+              <div className="mx-auto flex max-w-lg flex-col items-center text-center">
+                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e6f5f2] text-[#258b86]"><Heart size={25}/></span>
+                <h3 className="mt-4 text-xl font-extrabold text-[#1d4140]">Suas dicas começam aqui</h3>
+                <p className="mt-2 text-sm leading-6 text-[#87958a]">Este será o cantinho para reunir recomendações que vocês encontrarem: nome do lugar, endereço, faixa de preço, link, observações e o que vale a pena pedir ou fazer.</p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#f2f8f5] px-4 py-3 text-xs font-bold text-[#43816e]"><Plus size={15}/> Cadastro de dicas será adicionado nesta área</div>
+              </div>
+            </section>
+            <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Área preparada para organizar recomendações da viagem. Nenhuma dica foi cadastrada ainda.</p>
+          </div>
         ) : activeSection === "Checklist" ? (
           <div className="space-y-6">
             <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
@@ -230,7 +271,7 @@ function Index() {
         )}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-[#e6e1d7] bg-[#fffefa]/95 px-1 py-2 backdrop-blur-xl lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-6 border-t border-[#e6e1d7] bg-[#fffefa]/95 px-1 py-2 backdrop-blur-xl lg:hidden">
         {navigation.map((item) => { const Icon = item.icon; return <a key={item.label} href="#" onClick={(event)=>{event.preventDefault();setActiveSection(item.label);}} aria-current={activeSection===item.label?"page":undefined} className={`flex flex-col items-center gap-1 py-1 text-[9px] ${activeSection===item.label?"font-extrabold text-[#16847e]":"font-semibold text-[#8b9990]"}`}><Icon size={19} strokeWidth={activeSection===item.label?2.5:1.8}/>{item.label}</a>; })}
       </nav>
     </div>
