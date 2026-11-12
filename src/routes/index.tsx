@@ -174,7 +174,7 @@ function Index() {
                   </>
                 );
                 if (category.title === "Restaurantes" || category.title === "Praias e piscinas" || category.title === "Passeios") {
-                  const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : "parceiros";
+                  const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : "passeios";
                   return <Link key={category.title} to="/" search={{ aba: targetTab }} className={cardClass}>{cardBody}</Link>;
                 }
                 return <section key={category.title} className={cardClass}>{cardBody}</section>;
