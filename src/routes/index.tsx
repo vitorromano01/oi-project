@@ -26,13 +26,13 @@ const navigation = [
 ];
 
 const pending = [
-  { title: "Definir o transfer", detail: "Aeroporto do Recife → hospedagem", color: "coral", tag: "Prioridade" },
+  { title: "Definir o aluguel do carro", detail: "Retirada no aeroporto do Recife", color: "coral", tag: "Prioridade" },
   { title: "Conferir a tábua de marés", detail: "Piscinas naturais · 15 de fevereiro", color: "blue", tag: "Passeio" },
   { title: "Preparar a mala da criança", detail: "Roupas, documentos e itens essenciais", color: "gold", tag: "Checklist" },
 ];
 
 const itinerary = [
-  { date: "14", month: "FEV", day: "Domingo", title: "Chegada ao paraíso", detail: "Desembarque, transfer e check-in", icon: Plane, tone: "coral" },
+  { date: "14", month: "FEV", day: "Domingo", title: "Chegada ao paraíso", detail: "Retirada do carro alugado e check-in", icon: Plane, tone: "coral" },
   { date: "15", month: "FEV", day: "Segunda", title: "Piscinas naturais", detail: "Passeio no melhor horário da maré", icon: Waves, tone: "blue" },
   { date: "16", month: "FEV", day: "Terça", title: "Dia em Muro Alto", detail: "Mar calmo e tempo para relaxar", icon: Umbrella, tone: "green" },
 ];
