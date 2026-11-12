@@ -75,7 +75,7 @@ function Index() {
     transfer: "A definir",
     insurance: "",
     wifi: "",
-    notes: "",
+    notes: [""],
   });
   const updateInfo = (key: keyof typeof infoFields, value: string) => setInfoFields((current) => ({ ...current, [key]: value }));
   useEffect(() => {
@@ -295,7 +295,16 @@ function Index() {
 
             <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3eee5] text-[#98764d]"><Bookmark size={19}/></span><div><h3 className="text-lg font-extrabold text-[#234442]">Observações pessoais</h3><p className="text-xs text-[#89968d]">Anotações livres para lembrar durante a viagem</p></div></div>
-              <textarea value={infoFields.notes} onChange={(e)=>updateInfo("notes",e.target.value)} rows={4} placeholder="Anote aqui recomendações, lembretes, detalhes ou qualquer informação importante..." className="mt-4 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm leading-6 outline-none focus:border-[#32958a]"/>
+              <div className="mt-4 space-y-3">
+                {infoFields.notes.map((note, index) => <div key={index} className="flex items-start gap-2">
+                  <div className="flex-1">
+                    <label className="mb-1.5 block text-[10px] font-extrabold uppercase tracking-wider text-[#89968d]">Observação {index + 1}</label>
+                    <textarea value={note} onChange={(e)=>setInfoFields((current)=>({...current,notes:current.notes.map((item,i)=>i===index?e.target.value:item)}))} rows={2} placeholder="Ex.: senha do Wi-Fi de um restaurante, uma dica ou um lembrete..." className="w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm leading-6 outline-none focus:border-[#32958a]"/>
+                  </div>
+                  {infoFields.notes.length > 1 && <button type="button" onClick={()=>setInfoFields((current)=>({...current,notes:current.notes.filter((_,i)=>i!==index)}))} aria-label={`Remover observação ${index+1}`} className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#f0d9d4] bg-[#fff7f5] text-[#b66b5d] transition hover:bg-[#fce9e5]"><X size={16}/></button>}
+                </div>)}
+                <button type="button" onClick={()=>setInfoFields((current)=>({...current,notes:[...current.notes,""]}))} className="inline-flex items-center gap-2 rounded-xl bg-[#e6f5f2] px-4 py-3 text-xs font-extrabold text-[#258b86] transition hover:bg-[#d8efea]"><Plus size={16}/> Acrescentar observação</button>
+              </div>
               <label className="mt-4 block text-xs font-bold text-[#49635b]">Transfer Recife ↔ Porto de Galinhas<input value={infoFields.transfer} onChange={(e)=>updateInfo("transfer",e.target.value)} placeholder="A definir / detalhes do transfer" className="mt-1.5 w-full rounded-xl border border-[#e8e5dc] bg-[#fcfbf8] px-3 py-3 text-sm font-medium outline-none focus:border-[#32958a]"/></label>
             </section>
 
