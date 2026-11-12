@@ -14,8 +14,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Organize os detalhes da sua viagem em um só lugar." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" } =>
-    search["aba"] === "restaurantes" || search["aba"] === "praias" ? { aba: search["aba"] as "restaurantes" | "praias" } : {},
+  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" | "parceiros" } =>
+    search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "parceiros" ? { aba: search["aba"] as "restaurantes" | "praias" | "parceiros" } : {},
   component: Index,
 });
 
@@ -136,6 +136,13 @@ function Index() {
               </div>
               <BeachesPanel />
             </div>
+          ) : aba === "parceiros" ? (
+            <div className="space-y-6">
+              <div className="px-1">
+                <Link to="/" search={{}} className="inline-flex items-center gap-1.5 rounded-xl border border-[#e5dfd2] bg-white px-3 py-2 text-xs font-bold text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><ChevronLeft size={15} /> Voltar para Dicas</Link>
+              </div>
+              <PartnersPanel />
+            </div>
           ) : (
           <div className="space-y-6">
             <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
@@ -155,6 +162,7 @@ function Index() {
                 {title:"Praias e piscinas",detail:"Praias, piscinas naturais e melhores horários",icon:Waves,tone:"blue",count:"Lugares para conhecer"},
                 {title:"Passeios",detail:"Experiências, buggy, jangada e aventuras",icon:MapPinned,tone:"green",count:"Experiências"},
                 {title:"Cafés e lojinhas",detail:"Cafés, sobremesas, feirinhas e compras",icon:Coffee,tone:"gold",count:"Achadinhos"},
+                {title:"Parceiros locais",detail:"Passeios, jangadas, mergulho e experiências",icon:Heart,tone:"green",count:"Serviços para consultar"},
               ].map((category) => {
                 const Icon = category.icon;
                 const cardClass = "rounded-[23px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md";
@@ -166,8 +174,9 @@ function Index() {
                   <div className="mt-4 flex items-center justify-between border-t border-[#f0eee8] pt-3"><span className="text-[10px] font-bold text-[#9aa49b]">{category.count}</span><span className="text-[#32958a]"><ArrowUpRight size={16}/></span></div>
                   </>
                 );
-                if (category.title === "Restaurantes" || category.title === "Praias e piscinas") {
-                  return <Link key={category.title} to="/" search={{ aba: category.title === "Restaurantes" ? "restaurantes" : "praias" }} className={cardClass}>{cardBody}</Link>;
+                if (category.title === "Restaurantes" || category.title === "Praias e piscinas" || category.title === "Parceiros locais") {
+                  const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : "parceiros";
+                  return <Link key={category.title} to="/" search={{ aba: targetTab }} className={cardClass}>{cardBody}</Link>;
                 }
                 return <section key={category.title} className={cardClass}>{cardBody}</section>;
               })}
@@ -313,6 +322,37 @@ function SummaryCard({ icon: Icon, label, value, note, tone }: { icon: typeof Wa
   </div>;
 }
 
+
+function PartnersPanel() {
+  const partners = [
+    {name:"Associação dos Jangadeiros de Porto de Galinhas",type:"Jangada às piscinas naturais",rating:"4,3",reviews:"133 avaliações",description:"Entidade local que reúne jangadeiros responsáveis pelo passeio tradicional até as piscinas naturais da vila. Uma opção direta para conhecer o recife.",address:"Rua da Esperança, Porto de Galinhas",phone:"5581993956537",tag:"Experiência clássica",source:"https://www.goany.com.br/porto-de-galinhas/categorias/experiencias"},
+    {name:"Buggy Tour – Passeio de Buggy",type:"Passeio de buggy ponta a ponta",rating:"5,0",reviews:"1.287 avaliações",description:"Passeios privativos por praias como Muro Alto, Cupe, Porto e Maracaípe, com opções de duração diferentes. Mesmo com carro alugado, pode ser interessante para fazer o percurso com guia local.",address:"Rua Esperança, Porto de Galinhas",phone:"5581987427618",tag:"Praias com guia local",source:"https://www.tripadvisor.com.br/Attraction_Review-g303461-d21313705-Reviews-Passeio_de_buggy_Porto_de_Galinhas-Porto_de_Galinhas_Ipojuca_State_of_Pernambuco.html"},
+    {name:"Porto Point Mergulho",type:"Mergulho e experiências subaquáticas",rating:"4,6",reviews:"98 avaliações",description:"Operadora de mergulho na Rua das Piscinas Naturais, com opções para iniciantes e mergulhadores. Confirme os horários conforme a maré.",address:"Rua das Piscinas Naturais, 4 – Porto de Galinhas",phone:"5581986317440",tag:"Para conhecer os recifes",source:"https://www.goany.com.br/porto-de-galinhas/passeios"},
+    {name:"Arthur Turismo Premium",type:"Passeios privativos e buggy",rating:"5,0",reviews:"618 avaliações",description:"Agência local com experiências privativas, buggy ponta a ponta e roteiros para praias da região. O passeio divulgado percorre Muro Alto, Cupe e Maracaípe.",address:"Porto de Galinhas",phone:"5581993180336",tag:"Passeio privativo",source:"https://arthurturismo.com.br/passeio-de-buggy/"},
+    {name:"Manguezal Ecoturismo",type:"Catamarã na Praia dos Carneiros",rating:"4,7",reviews:"385 avaliações",description:"Operadora de passeios náuticos em Tamandaré, associada ao roteiro de catamarã pelos cenários de Carneiros e arredores. Boa opção para pesquisar para o passeio de dia inteiro.",address:"Rua do Sesi, s/n – Campas, Tamandaré – PE",phone:"5581987410144",tag:"Passeio em Carneiros",source:"https://www.tripadvisor.com.br/Attractions-g303461-Activities-c61-t167-Porto_de_Galinhas_Ipojuca_State_of_Pernambuco.html"}
+  ];
+  return (
+    <>
+      <section className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-7">
+        <div className="relative z-10 max-w-2xl"><span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Heart size={13}/> Parceiros e serviços locais</span><h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">Quem pode ajudar a aproveitar a viagem</h2><p className="mt-2 text-sm leading-6 text-[#d9f1e8]">Uma seleção inicial de operadores e serviços encontrados em fontes públicas para passeios que combinam com o roteiro de vocês.</p></div>
+      </section>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {partners.map((partner,index) => (
+          <article key={partner.name} className="rounded-[23px] border border-[#eae4d8] bg-white p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-3"><div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Parceiro {index+1}</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">{partner.name}</h3></div><span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ {partner.rating}/5</span></div>
+            <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-[#87958a]">{partner.type}</p>
+            <p className="mt-3 text-xs leading-5 text-[#788b80]">{partner.description}</p>
+            <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>{partner.address}</div>
+            <p className="mt-2 text-[10px] text-[#9aa399]">{partner.reviews} · avaliação pública consultada na pesquisa</p>
+            <div className="mt-4 flex flex-wrap gap-2"><a href={`https://wa.me/${partner.phone}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-xl bg-[#e6f5f2] px-3 py-2 text-xs font-bold text-[#258b86] hover:bg-[#d9efea]">WhatsApp <ArrowUpRight size={13}/></a><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partner.name+" "+partner.address)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-xl border border-[#e8eee8] px-3 py-2 text-xs font-bold text-[#526b60] hover:bg-[#f7faf7]">Ver no mapa <MapPinned size={13}/></a><a href={partner.source} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-xl border border-[#e8eee8] px-3 py-2 text-xs font-bold text-[#526b60] hover:bg-[#f7faf7]">Fonte <ArrowUpRight size={13}/></a></div>
+            <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">{partner.tag}</span>
+          </article>
+        ))}
+      </div>
+      <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Seleção informativa, não uma parceria comercial ou endosso do aplicativo. Avaliações e quantidade de opiniões são referências encontradas na pesquisa e podem mudar. Antes de contratar, confirme diretamente preço, disponibilidade, o que está incluso, política de cancelamento, credenciamento e condições de segurança. Para piscinas naturais, combine o horário com a tábua de marés.</p>
+    </>
+  );
+}
 
 function BeachesPanel() {
   const beaches = [
