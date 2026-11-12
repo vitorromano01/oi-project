@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronRight,
   CircleDollarSign, Clock3, Compass, Luggage, MapPin, Palmtree,
   Plane, Sparkles, Users, Wallet, Waves, ClipboardCheck, Sun,
-  Camera, Umbrella, Menu, MoreHorizontal,
+  Camera, Umbrella, Menu, MoreHorizontal, Moon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -37,8 +38,10 @@ const itinerary = [
 ];
 
 function Index() {
+  const [darkMode, setDarkMode] = useState(false);
   return (
-    <div className="min-h-screen bg-[#f5f3ed] text-[#203b3b]">
+    <div data-theme={darkMode ? "dark" : "light"} className={`min-h-screen transition-colors duration-300 ${darkMode ? "theme-dark bg-[#102329] text-[#e6f0eb]" : "bg-[#f5f3ed] text-[#203b3b]"}`}>
+      <style>{`\n        .theme-dark main { background: #102329; }\n        .theme-dark main > section:not(.trip-hero), .theme-dark main > div > section { background-color: #1b3035 !important; border-color: #30474a !important; color: #e6f0eb !important; }\n        .theme-dark main section:not(.trip-hero) h3 { color: #edf5ef !important; }\n        .theme-dark main section:not(.trip-hero) p { color: #b6c9c1 !important; }\n        .theme-dark main section:not(.trip-hero) .bg-\\[\\#fcfbf8\\] { background: #223b3f !important; }\n        .theme-dark main section:not(.trip-hero) button { background: #28544d; color: #e9f4eb; }\n        .theme-dark main section:not(.trip-hero) [class*=border-] { border-color: #30474a; }\n        .theme-dark main footer { color: #8da69b; }\n        .theme-dark nav.fixed { background: rgba(20,42,47,.96); border-color: #30474a; }\n        .theme-dark nav.fixed a { color: #a9c2b8; }\n        .theme-dark nav.fixed a:first-child { color: #6fd0bd; }\n      `}</style>
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-[250px] flex-col bg-[#123f42] px-5 py-7 text-white lg:flex">
         <a href="/" className="mb-12 flex items-center gap-3 px-2">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f5b76c] text-[#16484a] shadow-lg shadow-black/10"><Palmtree size={23} /></span>
@@ -68,11 +71,12 @@ function Index() {
           <div className="hidden lg:block"><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#8a9b91]">Quinta-feira, 12 de novembro</p><h1 className="mt-1 text-[27px] font-extrabold tracking-tight text-[#183f40]">Oi! Que bom ter você por aqui <span className="text-[#e99b55]">✦</span></h1></div>
           <div className="ml-auto flex items-center gap-2">
             <span className="hidden rounded-full border border-[#e5dfd2] bg-white/80 px-3 py-2 text-xs font-semibold text-[#71847a] sm:inline-flex sm:items-center sm:gap-2"><span className="h-2 w-2 rounded-full bg-[#62a77b]" /> Planejamento em andamento</span>
+            <button type="button" onClick={() => setDarkMode((value) => !value)} aria-label={darkMode ? "Ativar tema claro" : "Ativar tema escuro"} aria-pressed={darkMode} className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-xs font-bold transition hover:-translate-y-0.5 hover:shadow-md ${darkMode ? "border-[#466267] bg-[#1b3035] text-[#f6cc8e]" : "border-[#e8e1d5] bg-white text-[#49635b]"}`}>{darkMode ? <Sun size={17} /> : <Moon size={17} />}<span className="hidden sm:inline">{darkMode ? "Modo claro" : "Modo escuro"}</span></button>
             <button aria-label="Mais opções" className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8e1d5] bg-white text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><MoreHorizontal size={20} /></button>
           </div>
         </header>
 
-        <section className="relative mb-6 min-h-[300px] overflow-hidden rounded-[30px] bg-[#087f83] text-white shadow-[0_18px_45px_-28px_rgba(9,94,91,.65)] sm:min-h-[320px]">
+        <section className="trip-hero relative mb-6 min-h-[300px] overflow-hidden rounded-[30px] bg-[#087f83] text-white shadow-[0_18px_45px_-28px_rgba(9,94,91,.65)] sm:min-h-[320px]">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_78%_18%,rgba(255,220,151,.42),transparent_25%),linear-gradient(112deg,#075c62_0%,#078b8b_52%,#54b6a2_100%)]" />
           <div className="absolute -right-10 -top-28 h-[370px] w-[370px] rounded-full border border-white/15" />
           <div className="absolute right-8 top-[-78px] h-[280px] w-[280px] rounded-full border border-white/15" />
