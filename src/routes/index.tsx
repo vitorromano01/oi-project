@@ -298,9 +298,9 @@ function Index() {
                 <div className="min-w-0 flex-1"><p className="truncate text-[13px] font-bold text-[#284744]">{item.title}</p><p className="mt-1 truncate text-[11px] text-[#89968d]">{item.detail}</p></div>
                 <span className="hidden rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-[#9b8c76] sm:inline">{item.tag}</span>
                 <ChevronRight size={17} className="shrink-0 text-[#b0b9ae] transition group-hover:translate-x-0.5 group-hover:text-[#328b79]" />
-              </div>)}
+              </button>)}
             </div>
-            <button className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#eaf4ed] px-4 py-2.5 text-xs font-extrabold text-[#28745e] transition hover:bg-[#dceee2]">Abrir checklist <ArrowUpRight size={15} /></button>
+            <button type="button" onClick={() => { setFocusChildChecklist(false); setActiveSection("Checklist"); }} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#eaf4ed] px-4 py-2.5 text-xs font-extrabold text-[#28745e] transition hover:bg-[#dceee2]">Abrir checklist <ArrowUpRight size={15} /></button>
           </section>
 
           <section className="overflow-hidden rounded-[26px] border border-[#eae4d8] bg-white p-5 shadow-[0_8px_30px_-24px_rgba(37,62,50,.3)] sm:p-6">
