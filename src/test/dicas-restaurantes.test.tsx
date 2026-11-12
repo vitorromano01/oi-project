@@ -1,13 +1,14 @@
 import { QueryClient } from "@tanstack/react-query";
-import {
-  createMemoryHistory,
-  createRouter,
-  RouterProvider,
-} from "@tanstack/react-router";
+import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
+import { resetSupabaseMock, signInAs } from "./supabase-mock";
+
+vi.mock("@/integrations/supabase/client", async () => ({
+  supabase: (await import("./supabase-mock")).fakeSupabase,
+}));
 
 // The Dicas area is state-driven, so the tests drive it through a memory router:
 // clicking the Restaurantes card must land on the restaurants page in one click,
@@ -22,6 +23,8 @@ async function renderApp(initialUrl: string) {
   await router.load();
 
   render(<RouterProvider router={router} />);
+  // The trip only renders once the signed-in account's data has loaded.
+  await screen.findByRole("button", { name: "Sair da conta" });
 
   return history;
 }
@@ -37,6 +40,11 @@ function openDicasCategories() {
 }
 
 describe("Dicas → Restaurantes navigation", () => {
+  beforeEach(() => {
+    resetSupabaseMock();
+    signInAs("user-1");
+  });
+
   it("makes the Restaurantes card a direct link to the restaurants page", async () => {
     await renderApp("/");
     openDicasCategories();
@@ -44,8 +52,10 @@ describe("Dicas → Restaurantes navigation", () => {
     const card = screen.getByRole("link", { name: /Restaurantes/ });
 
     expect(card.getAttribute("href")).toContain("aba=restaurantes");
-    // The other Dicas categories stay non-clickable, as before.
-    expect(screen.queryByRole("link", { name: /Cafés e lojinhas/ })).toBeNull();
+    // The other Dicas categories open their own pages, not the restaurants one.
+    expect(screen.getByRole("link", { name: /Cafés e lojinhas/ }).getAttribute("href")).toContain(
+      "aba=lojinhas",
+    );
   });
 
   it("opens the restaurants page on the first click, without an intermediate screen", async () => {
@@ -58,7 +68,6 @@ describe("Dicas → Restaurantes navigation", () => {
     expect(screen.getByText("15 lugares para conhecer")).toBeInTheDocument();
     expect(screen.queryByText("Cafés e lojinhas")).toBeNull();
     const backLink = screen.getByRole("link", { name: /Voltar para Dicas/ });
-    console.log("back link href:", JSON.stringify(backLink.getAttribute("href")));
     expect(backLink.getAttribute("href")).not.toBe("");
   });
 

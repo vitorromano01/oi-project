@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Trip state lives in one JSONB row per account in `public.trip_data` (owner-only RLS), read and written from the browser client through `src/lib/trip-data.ts`; new editable fields go into `TripData` + `normalizeTripData` so older rows keep loading.
+- `/` gates itself inline (`TripPage` in `src/routes/index.tsx`: sign-in screen → load → app) instead of an `_authenticated` layout, so the existing single-route + `?aba=` structure stays unchanged.
+- Autosave goes through `useAutosave`: the loaded value counts as saved and saves run one at a time, so defaults never overwrite stored data and the newest edit always wins.
+- Navigation-only state (active section, scroll focus) is never persisted.

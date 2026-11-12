@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronLeft, ChevronRight,
   CircleDollarSign, Clock3, Compass, Luggage, MapPin, Palmtree,
   Plane, Sparkles, Users, Wallet, Waves, ClipboardCheck, Sun,
   Camera, Umbrella, Menu, MoreHorizontal, Moon, PiggyBank, Bookmark, Utensils, MapPinned, Compass as CompassIcon, Coffee, Heart, Plus,
+  LogOut, Cloud, CloudOff, Loader2, RotateCw, X,
 } from "lucide-react";
+
+import { AuthScreen, TripStatusScreen } from "@/components/auth-screen";
+import { useAuthSession } from "@/hooks/use-auth-session";
+import { useAutosave, type SaveStatus } from "@/hooks/use-autosave";
+import { supabase } from "@/integrations/supabase/client";
+import { createDefaultTripData, fetchTripData, saveTripData, type TripData } from "@/lib/trip-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,7 +23,7 @@ export const Route = createFileRoute("/")({
   }),
   validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" | "passeios" | "lojinhas" } =>
     search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "passeios" || search["aba"] === "lojinhas" ? { aba: search["aba"] as "restaurantes" | "praias" | "passeios" | "lojinhas" } : {},
-  component: Index,
+  component: TripPage,
 });
 
 const navigation = [
@@ -43,41 +50,62 @@ const itinerary = [
 const checklistGroups = [{"title":"Roupas — adultos","icon":"👕","items":[["adult-swim","Roupas de banho (maiô, biquíni ou sunga)"],["adult-beach","Saídas de praia e roupas leves para usar na praia"],["adult-day","Camisetas, regatas e blusas leves para o dia a dia"],["adult-shorts","Shorts, bermudas, vestidos e roupas confortáveis"],["adult-night","Roupas para jantar e passeios à noite"],["adult-underwear","Roupas íntimas e meias"],["adult-sleep","Pijamas e roupa confortável para dormir"],["adult-shoes","Chinelos, sandálias e um calçado confortável"],["adult-sport","Roupa confortável para caminhada ou passeio"],["adult-extra","Uma troca extra e uma peça leve de frio"]]},{"title":"Roupas — criança (3 anos)","icon":"🧒","items":[["child-swim","Maiôs/sungas e roupas de banho extras"],["child-uv","Camisetas com proteção UV e roupa com proteção solar"],["child-beach","Roupas leves para praia e piscina"],["child-day","Conjuntos e trocas para todos os dias (levar extras)"],["child-night","Uma ou duas opções para sair à noite"],["child-underwear","Cuecas/calcinhas e meias em quantidade extra"],["child-sleep","Pijamas"],["child-shoes","Chinelos, sandálias e calçado confortável"],["child-hat","Chapéu ou boné com proteção para o sol"],["child-towel","Toalha ou roupão infantil"]]},{"title":"Praia e piscina","icon":"🏖️","items":[["beach-towels","Toalhas de praia"],["beach-bag","Bolsa ou mochila de praia"],["beach-sunscreen","Protetor solar adequado para adultos"],["beach-kid-sunscreen","Protetor solar infantil adequado à idade"],["beach-after","Pós-sol ou hidratante"],["beach-hats","Bonés, chapéus e óculos de sol"],["beach-shade","Canga ou esteira"],["beach-water","Garrafas de água reutilizáveis"],["beach-toys","Brinquedos de praia para a criança"],["beach-wet","Sacola para roupas molhadas e saco impermeável para eletrônicos"]]},{"title":"Higiene e cuidados pessoais","icon":"🧴","items":[["care-tooth","Escovas, creme dental e fio dental"],["care-bath","Shampoo, condicionador e sabonete"],["care-deo","Desodorante e itens de cuidados pessoais"],["care-hair","Pente/escova e acessórios de cabelo"],["care-skin","Hidratante e protetor labial"],["care-repel","Repelente adequado para adultos e criança"],["care-wipes","Lenços umedecidos e lenços de papel"],["care-diaper","Fraldas ou itens de desfralde, se ainda utilizar"],["care-bag","Necessaire e organizadores de mala"]]},{"title":"Saúde e conforto da criança","icon":"🩹","items":[["kid-meds","Medicamentos de uso habitual e receitas, se houver"],["kid-thermo","Termômetro"],["kid-firstaid","Itens básicos de primeiros socorros"],["kid-comfort","Objeto de conforto para dormir (naninha ou brinquedo)"],["kid-snacks","Copos, talheres infantis e lanchinhos para o trajeto"],["kid-car-seat","Confirmar cadeirinha infantil adequada no carro alugado"]]},{"title":"Documentos, eletrônicos e viagem","icon":"🎒","items":[["trip-docs","Documentos de identificação de todos"],["trip-child-docs","Documentos da criança e autorização, se necessária"],["trip-bookings","Comprovantes de voos e hospedagem"],["trip-car","Reserva do carro, CNH do condutor e cartão exigido pela locadora"],["trip-chargers","Celulares e carregadores"],["trip-power","Power bank e adaptadores, se necessário"],["trip-headphones","Fones de ouvido e entretenimento para o trajeto"],["trip-bags","Malas, mochilas e etiquetas de identificação"],["trip-glasses","Óculos de grau/lentes e estojo, se utilizarem"]]}] as const;
 
 
-function Index() {
+// The trip data is private: nothing below renders until there is a signed-in
+// session and that account's saved data (or the defaults, for a new account)
+// has finished loading.
+function TripPage() {
+  const auth = useAuthSession();
+  const userId = auth.status === "signed_in" ? auth.session.user.id : null;
+  const [load, setLoad] = useState<{ userId: string; data: TripData } | { userId: string; error: true } | null>(null);
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    if (!userId) {
+      setLoad(null);
+      return;
+    }
+    let cancelled = false;
+    setLoad(null);
+    fetchTripData(userId)
+      .then((saved) => { if (!cancelled) setLoad({ userId, data: saved ?? createDefaultTripData() }); })
+      .catch(() => { if (!cancelled) setLoad({ userId, error: true }); });
+    return () => { cancelled = true; };
+  }, [userId, attempt]);
+
+  if (auth.status === "loading") return <TripStatusScreen title="Abrindo a viagem…" />;
+  if (auth.status === "signed_out" || !userId) return <AuthScreen />;
+  if (!load || load.userId !== userId) return <TripStatusScreen title="Carregando seus dados…" detail="Buscando o que você já salvou." />;
+  if ("error" in load) {
+    return <TripStatusScreen title="Não foi possível carregar seus dados" detail="Verifique sua conexão com a internet e tente de novo. Nada do que você salvou foi perdido." action={{ label: "Tentar novamente", onClick: () => setAttempt((n) => n + 1) }} />;
+  }
+  return <Index key={userId} userId={userId} email={auth.session.user.email ?? ""} initialData={load.data} />;
+}
+
+function Index({ userId, email, initialData }: { userId: string; email: string; initialData: TripData }) {
   const { aba } = Route.useSearch();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(initialData.darkMode);
   const [activeSection, setActiveSection] = useState(aba ? "Dicas" : "Visão geral");
-  const [travelMoneyGoal, setTravelMoneyGoal] = useState(5500);
-  const [savedMoney, setSavedMoney] = useState(0);
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [travelMoneyGoal, setTravelMoneyGoal] = useState(initialData.travelMoneyGoal);
+  const [savedMoney, setSavedMoney] = useState(initialData.savedMoney);
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(initialData.checkedItems);
   const [focusChildChecklist, setFocusChildChecklist] = useState(false);
-  const [infoFields, setInfoFields] = useState({
-    hotelName: "",
-    hotelAddress: "",
-    hotelPhone: "",
-    checkIn: "14/02/2027",
-    checkOut: "19/02/2027",
-    airline: "",
-    outboundFlight: "",
-    outboundTime: "",
-    returnFlight: "",
-    returnTime: "",
-    bookingCode: "",
-    originAirport: "Aeroporto de Confins (CNF) — Belo Horizonte",
-    destinationAirport: "Aeroporto do Recife (REC)",
-    rentalCompany: "",
-    carModel: "",
-    carPickup: "Aeroporto do Recife",
-    carPickupTime: "",
-    carReturnTime: "",
-    carBooking: "",
-    transfer: "A definir",
-    insurance: "",
-    wifi: "",
-    notes: [""],
-  });
+  const [infoFields, setInfoFields] = useState(initialData.infoFields);
   const updateInfo = (key: keyof typeof infoFields, value: string) => setInfoFields((current) => ({ ...current, [key]: value }));
+  const tripData = useMemo<TripData>(() => ({ darkMode, travelMoneyGoal, savedMoney, checkedItems, infoFields }), [darkMode, travelMoneyGoal, savedMoney, checkedItems, infoFields]);
+  const saveForUser = useCallback((data: TripData) => saveTripData(userId, data), [userId]);
+  const autosave = useAutosave(tripData, saveForUser, { delay: 600 });
+  const [signingOut, setSigningOut] = useState(false);
+  const signOut = async () => {
+    setSigningOut(true);
+    // Write any pending change first so it is not lost with the session.
+    try {
+      await autosave.flush();
+      await supabase.auth.signOut();
+    } finally {
+      setSigningOut(false);
+    }
+  };
   useEffect(() => {
     if (activeSection === "Checklist" && focusChildChecklist) {
       document.getElementById("checklist-crianca")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -127,9 +155,17 @@ function Index() {
           <div className="ml-auto flex items-center gap-2">
             <span className="hidden rounded-full border border-[#e5dfd2] bg-white/80 px-3 py-2 text-xs font-semibold text-[#71847a] sm:inline-flex sm:items-center sm:gap-2"><span className="h-2 w-2 rounded-full bg-[#62a77b]" /> Planejamento em andamento</span>
             <button type="button" onClick={() => setDarkMode((value) => !value)} aria-label={darkMode ? "Ativar tema claro" : "Ativar tema escuro"} aria-pressed={darkMode} className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-xs font-bold transition hover:-translate-y-0.5 hover:shadow-md ${darkMode ? "border-[#466267] bg-[#1b3035] text-[#f6cc8e]" : "border-[#e8e1d5] bg-white text-[#49635b]"}`}>{darkMode ? <Sun size={17} /> : <Moon size={17} />}<span className="hidden sm:inline">{darkMode ? "Modo claro" : "Modo escuro"}</span></button>
+            <SaveIndicator status={autosave.status} onRetry={() => void autosave.retry()} />
             <button aria-label="Mais opções" className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8e1d5] bg-white text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><MoreHorizontal size={20} /></button>
+            <button type="button" onClick={() => void signOut()} disabled={signingOut} aria-label="Sair da conta" title={email ? `Sair (${email})` : "Sair da conta"} className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-xs font-bold transition hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60 ${darkMode ? "border-[#466267] bg-[#1b3035] text-[#f6cc8e]" : "border-[#e8e1d5] bg-white text-[#49635b]"}`}>{signingOut ? <Loader2 size={17} className="animate-spin" /> : <LogOut size={17} />}<span className="hidden sm:inline">Sair</span></button>
           </div>
         </header>
+        {autosave.status === "error" && (
+          <div role="alert" className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#f2c9bd] bg-[#fdf0eb] px-4 py-3 text-[#9c4630] sm:flex-row sm:items-center sm:justify-between">
+            <p className="flex items-start gap-2 text-xs font-semibold leading-5"><CloudOff size={16} className="mt-0.5 shrink-0" /> Não foi possível salvar suas últimas alterações. Verifique sua conexão — elas continuam aqui na tela e serão salvas assim que a conexão voltar.</p>
+            <button type="button" onClick={() => void autosave.retry()} className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-[#9c4630] shadow-sm transition hover:shadow-md"><RotateCw size={14} /> Tentar novamente</button>
+          </div>
+        )}
 
 
         {activeSection === "Financeiro" ? (
@@ -464,6 +500,21 @@ function Index() {
       </nav>
     </div>
   );
+}
+
+function SaveIndicator({ status, onRetry }: { status: SaveStatus; onRetry: () => void }) {
+  const view = {
+    idle: { icon: <Cloud size={15} />, label: "Sincronizado", tone: "text-[#62a77b]" },
+    pending: { icon: <Loader2 size={15} className="animate-spin" />, label: "Salvando…", tone: "text-[#8a9b91]" },
+    saving: { icon: <Loader2 size={15} className="animate-spin" />, label: "Salvando…", tone: "text-[#8a9b91]" },
+    saved: { icon: <Check size={15} />, label: "Salvo", tone: "text-[#62a77b]" },
+    error: { icon: <CloudOff size={15} />, label: "Erro ao salvar", tone: "text-[#c4593d]" },
+  }[status];
+  const className = `inline-flex h-10 items-center gap-1.5 rounded-xl px-2 text-[11px] font-bold ${view.tone}`;
+  if (status === "error") {
+    return <button type="button" onClick={onRetry} title="Tentar salvar novamente" aria-live="polite" className={`${className} transition hover:underline`}>{view.icon}<span className="sr-only sm:not-sr-only">{view.label}</span></button>;
+  }
+  return <span role="status" aria-live="polite" title={view.label} className={className}>{view.icon}<span className="sr-only sm:not-sr-only">{view.label}</span></span>;
 }
 
 function SummaryCard({ icon: Icon, label, value, note, tone }: { icon: typeof Wallet; label: string; value: string; note: string; tone: "gold" | "green" | "coral" | "blue" }) {
