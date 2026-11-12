@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  ArrowRight, CalendarDays, CheckCircle2, CircleDollarSign, Clock3,
-  MapPin, Plane, Plus, Users, Wallet, Waves, ClipboardList, Info,
-  LayoutDashboard, Menu, MoreHorizontal, ChevronRight,
+  ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronRight,
+  CircleDollarSign, Clock3, Compass, Luggage, MapPin, Palmtree,
+  Plane, Sparkles, Users, Wallet, Waves, ClipboardCheck, Sun,
+  Camera, Umbrella, Menu, MoreHorizontal,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -16,127 +17,162 @@ export const Route = createFileRoute("/")({
 });
 
 const navigation = [
-  { label: "Visão geral", icon: LayoutDashboard, active: true },
+  { label: "Visão geral", icon: Compass, active: true },
   { label: "Financeiro", icon: Wallet },
   { label: "Roteiro", icon: CalendarDays },
-  { label: "Checklist", icon: ClipboardList },
-  { label: "Informações", icon: Info },
+  { label: "Checklist", icon: ClipboardCheck },
+  { label: "Informações", icon: Luggage },
 ];
 
 const pending = [
-  { title: "Definir transfer do aeroporto", detail: "Recife → Porto de Galinhas", tag: "Prioridade alta" },
-  { title: "Conferir tábua de marés", detail: "Piscinas naturais · 15/02", tag: "Antes da viagem" },
-  { title: "Organizar itens da criança", detail: "Documentos e mala", tag: "Checklist" },
+  { title: "Definir o transfer", detail: "Aeroporto do Recife → hospedagem", color: "coral", tag: "Prioridade" },
+  { title: "Conferir a tábua de marés", detail: "Piscinas naturais · 15 de fevereiro", color: "blue", tag: "Passeio" },
+  { title: "Preparar a mala da criança", detail: "Roupas, documentos e itens essenciais", color: "gold", tag: "Checklist" },
 ];
 
 const itinerary = [
-  { date: "14 FEV", day: "Domingo", title: "Chegada e acomodação", detail: "Aeroporto do Recife · Check-in", icon: Plane },
-  { date: "15 FEV", day: "Segunda", title: "Piscinas naturais", detail: "Passeio conforme a maré", icon: Waves },
-  { date: "16 FEV", day: "Terça", title: "Praia de Muro Alto", detail: "Dia de praia em família", icon: MapPin },
+  { date: "14", month: "FEV", day: "Domingo", title: "Chegada ao paraíso", detail: "Desembarque, transfer e check-in", icon: Plane, tone: "coral" },
+  { date: "15", month: "FEV", day: "Segunda", title: "Piscinas naturais", detail: "Passeio no melhor horário da maré", icon: Waves, tone: "blue" },
+  { date: "16", month: "FEV", day: "Terça", title: "Dia em Muro Alto", detail: "Mar calmo e tempo para relaxar", icon: Umbrella, tone: "green" },
 ];
 
 function Index() {
   return (
-    <div className="min-h-screen bg-[#f7f8f6] text-[#202923]">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col border-r border-[#e8ece7] bg-white px-5 py-7 lg:flex">
-        <a href="/" className="mb-10 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e6f0e8] text-[#34734b]"><Waves size={21} /></div>
-          <div><p className="text-[15px] font-semibold tracking-tight">Nossa viagem</p><p className="text-xs text-[#879189]">Planeje com leveza</p></div>
+    <div className="min-h-screen bg-[#f5f3ed] text-[#203b3b]">
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-[250px] flex-col bg-[#123f42] px-5 py-7 text-white lg:flex">
+        <a href="/" className="mb-12 flex items-center gap-3 px-2">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f5b76c] text-[#16484a] shadow-lg shadow-black/10"><Palmtree size={23} /></span>
+          <span><span className="block text-[16px] font-bold tracking-tight">Nossa viagem</span><span className="mt-0.5 block text-[11px] text-[#a9c9c3]">Memórias começam aqui</span></span>
         </a>
-        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[.16em] text-[#9aa39c]">Menu principal</p>
-        <nav className="space-y-1">
+        <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[.2em] text-[#79a49b]">Sua jornada</p>
+        <nav className="space-y-1.5">
           {navigation.map((item) => {
             const Icon = item.icon;
-            return <a key={item.label} href="#" className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition ${item.active ? "bg-[#edf4ee] font-semibold text-[#34734b]" : "text-[#69756d] hover:bg-[#f5f7f4]"}`}><Icon size={18} />{item.label}</a>;
+            return <a key={item.label} href="#" className={`group flex items-center gap-3 rounded-2xl px-3.5 py-3.5 text-[13px] transition-all ${item.active ? "bg-[#f3b66f] font-bold text-[#174649] shadow-lg shadow-black/10" : "font-medium text-[#c2d9d2] hover:bg-white/10 hover:text-white"}`}><Icon size={18} strokeWidth={2.1} />{item.label}{item.active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#174649]" />}</a>;
           })}
         </nav>
-        <div className="mt-auto rounded-2xl bg-[#f5f7f3] p-4">
-          <div className="mb-2 flex items-center gap-2 text-[#34734b]"><Info size={16} /><span className="text-xs font-semibold">Dica de planejamento</span></div>
-          <p className="text-xs leading-5 text-[#748078]">Deixe reservas e documentos importantes reunidos na área de informações.</p>
+        <div className="mt-auto overflow-hidden rounded-[22px] border border-white/10 bg-[#1b5354] p-4">
+          <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5b76c] text-[#174649]"><Sparkles size={18} /></div>
+          <p className="text-sm font-bold">Já dá para sentir o verão?</p>
+          <p className="mt-1.5 text-xs leading-5 text-[#b4d0c7]">Tudo organizado por aqui para vocês só aproveitarem quando chegar a hora.</p>
+          <div className="mt-4 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#f5c58c]"><Sun size={13} /> Fevereiro, estamos chegando</div>
         </div>
       </aside>
 
-      <main className="mx-auto max-w-[1440px] px-5 pb-24 pt-6 sm:px-8 lg:ml-64 lg:px-10 lg:pb-10 lg:pt-10">
-        <header className="mb-8 flex items-center justify-between gap-4">
-          <div>
-            <p className="mb-1 text-sm text-[#849087]">Seu espaço de planejamento</p>
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-[30px]">Visão geral</h1>
+      <main className="mx-auto max-w-[1500px] px-4 pb-28 pt-5 sm:px-7 lg:ml-[250px] lg:px-10 lg:pb-12 lg:pt-8">
+        <header className="mb-7 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 lg:hidden">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5b76c] text-[#174649]"><Palmtree size={21} /></span>
+            <span className="text-sm font-bold">Nossa viagem</span>
           </div>
-          <button className="flex items-center gap-2 rounded-xl border border-[#e5eae4] bg-white px-3 py-2.5 text-sm font-medium text-[#536057] shadow-sm transition hover:bg-[#f8faf7]"><MoreHorizontal size={18} /><span className="hidden sm:inline">Opções da viagem</span></button>
+          <div className="hidden lg:block"><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#8a9b91]">Quinta-feira, 12 de novembro</p><h1 className="mt-1 text-[27px] font-extrabold tracking-tight text-[#183f40]">Oi! Que bom ter você por aqui <span className="text-[#e99b55]">✦</span></h1></div>
+          <div className="ml-auto flex items-center gap-2">
+            <span className="hidden rounded-full border border-[#e5dfd2] bg-white/80 px-3 py-2 text-xs font-semibold text-[#71847a] sm:inline-flex sm:items-center sm:gap-2"><span className="h-2 w-2 rounded-full bg-[#62a77b]" /> Planejamento em andamento</span>
+            <button aria-label="Mais opções" className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8e1d5] bg-white text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><MoreHorizontal size={20} /></button>
+          </div>
         </header>
 
-        <section className="relative mb-7 overflow-hidden rounded-[26px] bg-[#244f3b] p-6 text-white sm:p-8">
-          <div className="absolute -right-12 -top-24 h-72 w-72 rounded-full border border-white/10" />
-          <div className="absolute -right-2 -top-14 h-56 w-56 rounded-full border border-white/10" />
-          <div className="relative max-w-2xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-[#e0eee3]"><MapPin size={13} /> Pernambuco, Brasil</div>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Porto de Galinhas</h2>
-            <p className="mt-2 text-sm text-[#d0e0d4] sm:text-base">Uma viagem para aproveitar cada momento juntos.</p>
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#e2eee4]">
-              <span className="inline-flex items-center gap-2"><CalendarDays size={16} />14 – 19 de fevereiro de 2027</span>
-              <span className="inline-flex items-center gap-2"><Users size={16} />3 adultos e 1 criança</span>
+        <section className="relative mb-6 min-h-[300px] overflow-hidden rounded-[30px] bg-[#087f83] text-white shadow-[0_18px_45px_-28px_rgba(9,94,91,.65)] sm:min-h-[320px]">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_78%_18%,rgba(255,220,151,.42),transparent_25%),linear-gradient(112deg,#075c62_0%,#078b8b_52%,#54b6a2_100%)]" />
+          <div className="absolute -right-10 -top-28 h-[370px] w-[370px] rounded-full border border-white/15" />
+          <div className="absolute right-8 top-[-78px] h-[280px] w-[280px] rounded-full border border-white/15" />
+          <div className="absolute bottom-[-130px] right-[18%] h-[260px] w-[520px] rotate-[-12deg] rounded-[50%] bg-[#f5bd75]/20 blur-[1px]" />
+          <div className="absolute bottom-[-150px] right-[-3%] h-[230px] w-[480px] rotate-[9deg] rounded-[50%] bg-[#f8d69c]/25" />
+          <div className="absolute right-[17%] top-10 hidden h-20 w-20 rounded-full bg-[#ffd88f] shadow-[0_0_65px_22px_rgba(255,216,143,.18)] sm:block" />
+          <div className="relative z-10 flex min-h-[300px] flex-col justify-between p-6 sm:min-h-[320px] sm:p-9 lg:flex-row lg:items-end lg:p-10">
+            <div className="max-w-[620px]">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-2 text-[11px] font-bold uppercase tracking-[.14em] text-[#e1f5e9] backdrop-blur-sm"><MapPin size={13} /> Pernambuco · Brasil</div>
+              <p className="mb-1 text-sm font-medium text-[#c6eee1]">O destino da vez é...</p>
+              <h2 className="text-[36px] font-black leading-[1.02] tracking-[-.04em] sm:text-[52px]">Porto de<br className="sm:hidden" /> Galinhas<span className="text-[#ffd18b]">.</span></h2>
+              <p className="mt-4 max-w-md text-sm leading-6 text-[#d9f1e8] sm:text-[15px]">Dias de sol, mar quentinho e histórias boas para guardar.</p>
+              <div className="mt-6 flex flex-wrap gap-2.5 text-xs font-semibold">
+                <span className="inline-flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2.5 backdrop-blur"><CalendarDays size={15} />14–19 fev 2027</span>
+                <span className="inline-flex items-center gap-2 rounded-xl bg-white/15 px-3.5 py-2.5 backdrop-blur"><Users size={15} />4 viajantes</span>
+              </div>
+            </div>
+            <div className="mt-7 flex items-center gap-4 self-start rounded-2xl border border-white/20 bg-[#064f55]/35 px-4 py-3 backdrop-blur-md lg:mb-1 lg:mt-0">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ffd18b] text-[#14575a]"><Sun size={23} /></div>
+              <div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#bfe7db]">Faltam só</p><p className="text-[25px] font-black leading-none">94 <span className="text-xs font-semibold">dias</span></p></div>
             </div>
           </div>
-          <div className="relative mt-7 flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-[#dcebdd] px-3 py-1.5 text-xs font-semibold text-[#28583d]">Viagem planejada</span>
-            <span className="text-xs text-[#c3d7c8]">6 dias · 5 noites</span>
-          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/15"><div className="h-full w-[38%] rounded-r-full bg-[#ffd18b]" /></div>
         </section>
 
-        <section className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard icon={CircleDollarSign} label="Orçamento previsto" value="R$ 5.500" note="Valor de referência" />
-          <SummaryCard icon={CheckCircle2} label="Reservas principais" value="2 de 3" note="Voos e hospedagem pagos" />
-          <SummaryCard icon={Users} label="Viajantes" value="4 pessoas" note="3 adultos · 1 criança" />
-          <SummaryCard icon={Clock3} label="Duração" value="6 dias" note="5 noites de viagem" />
+        <section className="mb-7 grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <SummaryCard icon={CircleDollarSign} label="Orçamento previsto" value="R$ 5.500" note="Planejamento inicial" tone="gold" />
+          <SummaryCard icon={CheckCircle2} label="Reservas principais" value="2 de 3" note="Voos e hospedagem pagos" tone="green" />
+          <SummaryCard icon={Users} label="Quem vai viajar" value="4 pessoas" note="3 adultos + 1 criança" tone="coral" />
+          <SummaryCard icon={Clock3} label="Tempo de viagem" value="6 dias" note="5 noites para aproveitar" tone="blue" />
         </section>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.05fr_.95fr]">
-          <section className="rounded-[22px] border border-[#e8ece7] bg-white p-5 sm:p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div><h3 className="font-semibold">Pendências importantes</h3><p className="mt-1 text-xs text-[#8a958d]">Pequenos passos para deixar tudo pronto</p></div>
-              <span className="rounded-full bg-[#fff3df] px-2.5 py-1 text-xs font-semibold text-[#9a6b25]">3 abertas</span>
+        <div className="mb-7 grid grid-cols-1 gap-5 2xl:grid-cols-[1.08fr_.92fr]">
+          <section className="rounded-[26px] border border-[#eae4d8] bg-white p-5 shadow-[0_8px_30px_-24px_rgba(37,62,50,.3)] sm:p-6">
+            <div className="mb-5 flex items-start justify-between gap-3">
+              <div><div className="mb-1 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.18em] text-[#d28a4e]"><span className="h-1.5 w-1.5 rounded-full bg-[#e99b55]" /> Para resolver</div><h3 className="text-xl font-extrabold tracking-tight text-[#1d4140]">Deixe tudo redondinho</h3><p className="mt-1 text-xs text-[#87958a]">O que falta para viajar sem preocupação</p></div>
+              <span className="rounded-xl bg-[#fff0df] px-3 py-2 text-xs font-extrabold text-[#b96f36]">03 abertas</span>
             </div>
-            <div className="space-y-3">
-              {pending.map((item) => <div key={item.title} className="flex items-start gap-3 rounded-2xl bg-[#fafbf9] p-3.5">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-[#73917b]"><ClipboardList size={17} /></span>
-                <div className="min-w-0 flex-1"><p className="text-sm font-medium">{item.title}</p><p className="mt-1 text-xs text-[#8a958d]">{item.detail}</p><span className="mt-2 inline-block text-[10px] font-medium text-[#a17b42]">{item.tag}</span></div>
-                <ChevronRight className="mt-2 shrink-0 text-[#aab3ac]" size={17} />
+            <div className="space-y-2.5">
+              {pending.map((item) => <div key={item.title} className="group flex items-center gap-3 rounded-2xl border border-[#f0eee8] bg-[#fcfbf8] p-3 transition hover:border-[#d7e6dc] hover:bg-[#f8fbf7]">
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${item.color === "coral" ? "bg-[#fff0e8] text-[#d87954]" : item.color === "blue" ? "bg-[#e8f5f5] text-[#278d91]" : "bg-[#fff5dc] text-[#c18b35]"}`}><ClipboardCheck size={18} /></span>
+                <div className="min-w-0 flex-1"><p className="truncate text-[13px] font-bold text-[#284744]">{item.title}</p><p className="mt-1 truncate text-[11px] text-[#89968d]">{item.detail}</p></div>
+                <span className="hidden rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-[#9b8c76] sm:inline">{item.tag}</span>
+                <ChevronRight size={17} className="shrink-0 text-[#b0b9ae] transition group-hover:translate-x-0.5 group-hover:text-[#328b79]" />
               </div>)}
             </div>
-            <button className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#34734b] hover:text-[#244f3b]">Ver checklist completo <ArrowRight size={16} /></button>
+            <button className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#eaf4ed] px-4 py-2.5 text-xs font-extrabold text-[#28745e] transition hover:bg-[#dceee2]">Abrir checklist <ArrowUpRight size={15} /></button>
           </section>
 
-          <section className="rounded-[22px] border border-[#e8ece7] bg-white p-5 sm:p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div><h3 className="font-semibold">Prévia do roteiro</h3><p className="mt-1 text-xs text-[#8a958d]">Os primeiros dias da viagem</p></div>
-              <button className="text-sm font-semibold text-[#34734b]">Ver roteiro</button>
+          <section className="overflow-hidden rounded-[26px] border border-[#eae4d8] bg-white p-5 shadow-[0_8px_30px_-24px_rgba(37,62,50,.3)] sm:p-6">
+            <div className="mb-5 flex items-start justify-between gap-3">
+              <div><div className="mb-1 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.18em] text-[#29939a]"><span className="h-1.5 w-1.5 rounded-full bg-[#36a8a5]" /> Um gostinho do que vem aí</div><h3 className="text-xl font-extrabold tracking-tight text-[#1d4140]">Primeiros dias</h3><p className="mt-1 text-xs text-[#87958a]">Roteiro inicial da viagem</p></div>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f5f2] text-[#258b86]"><CalendarDays size={19} /></span>
             </div>
             <div className="space-y-0">
               {itinerary.map((item, index) => {
                 const Icon = item.icon;
                 return <div key={item.date} className="flex gap-3">
-                  <div className="flex w-12 shrink-0 flex-col items-center"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf4ee] text-[#34734b]"><Icon size={18} /></span>{index < itinerary.length - 1 && <span className="my-1 h-9 w-px bg-[#e5ebe5]" />}</div>
-                  <div className="min-w-0 flex-1 pb-5"><p className="text-[10px] font-semibold tracking-wide text-[#829087]">{item.date} · {item.day}</p><p className="mt-1 text-sm font-semibold">{item.title}</p><p className="mt-1 text-xs text-[#8a958d]">{item.detail}</p></div>
+                  <div className="flex w-[48px] shrink-0 flex-col items-center"><div className={`flex h-[48px] w-[48px] flex-col items-center justify-center rounded-[15px] ${item.tone === "coral" ? "bg-[#fff0e8] text-[#d87954]" : item.tone === "blue" ? "bg-[#e7f5f5] text-[#278d91]" : "bg-[#edf5e9] text-[#60915e]"}`}><span className="text-[17px] font-black leading-none">{item.date}</span><span className="mt-0.5 text-[8px] font-extrabold tracking-widest">{item.month}</span></div>{index < itinerary.length - 1 && <span className="my-1 h-7 w-px border-l border-dashed border-[#d6ded5]" />}</div>
+                  <div className="min-w-0 flex-1 pb-4 pt-0.5"><p className="text-[9px] font-extrabold uppercase tracking-[.14em] text-[#9aa59b]">{item.day}</p><p className="mt-1 text-[13px] font-extrabold text-[#284744]">{item.title}</p><p className="mt-1 text-[11px] text-[#89968d]">{item.detail}</p></div>
+                  <span className="mt-2 text-[#7d9d8d]"><Icon size={17} /></span>
                 </div>;
               })}
             </div>
-            <div className="rounded-xl bg-[#f5f8f4] px-3.5 py-3 text-xs leading-5 text-[#748078]">Os passeios são sugestões iniciais e podem ser ajustados conforme clima, maré e disposição do grupo.</div>
+            <div className="mt-1 flex items-start gap-2 rounded-xl bg-[#f2f8f5] px-3.5 py-3 text-[10px] leading-4 text-[#6d877a]"><Sparkles size={14} className="mt-0.5 shrink-0 text-[#32958a]" />Sugestões flexíveis: vamos ajustar os passeios conforme a maré, o clima e o ritmo da família.</div>
           </section>
         </div>
 
-        <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 text-xs text-[#9aa39c]"><span>Nossa viagem · Seu planejamento em um só lugar</span><span>Informações ilustrativas e editáveis</span></footer>
+        <section className="mb-7 grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr]">
+          <div className="flex items-center gap-4 rounded-[22px] bg-[#f4dfc4] p-5 text-[#714e31]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff2df] text-[#c17e3d]"><Camera size={22} /></span>
+            <div><p className="text-sm font-extrabold">Colecione momentos</p><p className="mt-1 text-[11px] leading-4 text-[#8b6949]">Um espaço para guardar ideias, lugares e lembranças da viagem.</p></div>
+            <ArrowUpRight size={18} className="ml-auto shrink-0 text-[#b17a48]" />
+          </div>
+          <div className="flex items-center gap-4 rounded-[22px] bg-[#dceee7] p-5 text-[#285e50]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f0faf4] text-[#348a72]"><Luggage size={22} /></span>
+            <div><p className="text-sm font-extrabold">Tudo no seu tempo</p><p className="mt-1 text-[11px] leading-4 text-[#5e8274]">Voos e hospedagem já estão pagos. Agora é organizar os detalhes.</p></div>
+            <Check size={18} className="ml-auto shrink-0 text-[#348a72]" />
+          </div>
+        </section>
+
+        <footer className="flex flex-wrap items-center justify-between gap-2 px-1 text-[10px] font-medium text-[#9aa399]"><span>Feito para planejar com calma e viajar com alegria ☀</span><span>Valores e roteiro são referências editáveis</span></footer>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-[#e7ece6] bg-white/95 px-1 py-2 backdrop-blur lg:hidden">
-        {navigation.map((item) => { const Icon = item.icon; return <a key={item.label} href="#" className={`flex flex-col items-center gap-1 py-1 text-[10px] ${item.active ? "font-semibold text-[#34734b]" : "text-[#8a958d]"}`}><Icon size={19} />{item.label}</a>; })}
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-[#e6e1d7] bg-[#fffefa]/95 px-1 py-2 backdrop-blur-xl lg:hidden">
+        {navigation.map((item) => { const Icon = item.icon; return <a key={item.label} href="#" className={`flex flex-col items-center gap-1 py-1 text-[9px] ${item.active ? "font-extrabold text-[#16847e]" : "font-semibold text-[#8b9990]"}`}><Icon size={19} strokeWidth={item.active ? 2.5 : 1.8} />{item.label}</a>; })}
       </nav>
     </div>
   );
 }
 
-function SummaryCard({ icon: Icon, label, value, note }: { icon: typeof Wallet; label: string; value: string; note: string }) {
-  return <div className="rounded-[20px] border border-[#e8ece7] bg-white p-5">
-    <div className="mb-4 flex items-center justify-between"><p className="text-xs font-medium text-[#849087]">{label}</p><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f0f5f0] text-[#568064]"><Icon size={18} /></span></div>
-    <p className="text-2xl font-semibold tracking-tight">{value}</p><p className="mt-1 text-xs text-[#929c94]">{note}</p>
+function SummaryCard({ icon: Icon, label, value, note, tone }: { icon: typeof Wallet; label: string; value: string; note: string; tone: "gold" | "green" | "coral" | "blue" }) {
+  const tones = {
+    gold: "bg-[#fff2dc] text-[#bd8438]",
+    green: "bg-[#e4f2e7] text-[#468b63]",
+    coral: "bg-[#ffede5] text-[#d77956]",
+    blue: "bg-[#e5f3f4] text-[#328e94]",
+  };
+  return <div className="group rounded-[22px] border border-[#eae4d8] bg-white p-4 shadow-[0_8px_26px_-25px_rgba(37,62,50,.35)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_15px_30px_-22px_rgba(37,62,50,.35)] sm:p-5">
+    <div className="mb-3 flex items-center justify-between gap-2"><p className="text-[10px] font-extrabold uppercase tracking-[.12em] text-[#89968d]">{label}</p><span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${tones[tone]}`}><Icon size={18} /></span></div>
+    <p className="text-[22px] font-black tracking-tight text-[#234442] sm:text-[25px]">{value}</p><p className="mt-1 text-[10px] font-medium text-[#9aa49b]">{note}</p>
   </div>;
 }
