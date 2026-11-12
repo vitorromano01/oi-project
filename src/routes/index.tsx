@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronLeft, ChevronRight,
@@ -51,6 +51,13 @@ function Index() {
   const [travelMoneyGoal, setTravelMoneyGoal] = useState(5500);
   const [savedMoney, setSavedMoney] = useState(0);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [focusChildChecklist, setFocusChildChecklist] = useState(false);
+  useEffect(() => {
+    if (activeSection === "Checklist" && focusChildChecklist) {
+      document.getElementById("checklist-crianca")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setFocusChildChecklist(false);
+    }
+  }, [activeSection, focusChildChecklist]);
   const checklistTotal = checklistGroups.reduce((total, group) => total + group.items.length, 0);
   const checklistDone = Object.values(checkedItems).filter(Boolean).length;
   const checklistProgress = checklistTotal ? Math.round((checklistDone / checklistTotal) * 100) : 0;
@@ -187,6 +194,36 @@ function Index() {
 
           </div>
           )
+        ) : activeSection === "Carro alugado" ? (
+          <div className="space-y-6">
+            <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Luggage size={13}/> Transporte da viagem</span>
+              <h2 className="mt-4 text-3xl font-black">Carro alugado</h2>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-[#d9f1e8]">Retirada prevista no aeroporto do Recife. Use este lembrete para conferir os detalhes da reserva antes de viajar.</p>
+            </section>
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 sm:p-6">
+              <h3 className="text-lg font-extrabold text-[#234442]">O que confirmar</h3>
+              <div className="mt-4 space-y-3 text-sm text-[#49635b]">
+                {["Data e horário de retirada e devolução","Local e balcão da locadora no aeroporto","Categoria do veículo e espaço para bagagens","Cadeirinha infantil adequada para 3 anos","Seguro, caução, combustível e quilometragem","CNH, cartão exigido e comprovante da reserva"].map((item) => <div key={item} className="flex items-start gap-3 rounded-xl bg-[#fcfbf8] p-3"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#32958a]"/><span>{item}</span></div>)}
+              </div>
+            </section>
+            <button type="button" onClick={() => setActiveSection("Visão geral")} className="rounded-xl bg-[#167d70] px-4 py-2.5 text-xs font-extrabold text-white">Voltar à visão geral</button>
+          </div>
+        ) : activeSection === "Tábua de marés" ? (
+          <div className="space-y-6">
+            <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Waves size={13}/> Planejamento das piscinas naturais</span>
+              <h2 className="mt-4 text-3xl font-black">Tábua de marés</h2>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-[#d9f1e8]">A visita às piscinas naturais está prevista para 15 de fevereiro de 2027. O melhor horário depende da maré baixa do dia.</p>
+            </section>
+            <section className="rounded-[24px] border border-[#eae4d8] bg-white p-5 sm:p-6">
+              <h3 className="text-lg font-extrabold text-[#234442]">Antes de definir o passeio</h3>
+              <p className="mt-2 text-sm leading-6 text-[#71847a]">Os horários e alturas da maré devem ser conferidos na tábua oficial mais perto da viagem. Não exibimos uma previsão agora para evitar informar um horário incorreto.</p>
+              <div className="mt-4 rounded-2xl bg-[#f2f8f5] p-4"><p className="text-xs font-extrabold uppercase tracking-wider text-[#28745e]">Data planejada</p><p className="mt-1 text-2xl font-black text-[#234442]">15 de fevereiro de 2027</p><p className="mt-1 text-xs text-[#71847a]">Porto de Galinhas · piscinas naturais</p></div>
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-[#71847a]"><li>Priorize a janela próxima da maré baixa.</li><li>Confirme as condições do mar e a operação das jangadas no dia.</li><li>Considere o ritmo e a segurança da criança no passeio.</li></ul>
+            </section>
+            <button type="button" onClick={() => setActiveSection("Visão geral")} className="rounded-xl bg-[#167d70] px-4 py-2.5 text-xs font-extrabold text-white">Voltar à visão geral</button>
+          </div>
         ) : activeSection === "Checklist" ? (
           <div className="space-y-6">
             <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
@@ -200,7 +237,7 @@ function Index() {
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {checklistGroups.map((group) => {
                 const done = group.items.filter(([id]) => checkedItems[id]).length;
-                return <section key={group.title} className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+                return <section id={group.title === "Roupas — criança (3 anos)" ? "checklist-crianca" : undefined} key={group.title} className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
                   <div className="mb-4 flex items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f5f2] text-xl">{group.icon}</span><div><h3 className="text-sm font-extrabold text-[#234442]">{group.title}</h3><p className="mt-1 text-[10px] text-[#89968d]">{done} de {group.items.length} resolvidos</p></div></div><span className="rounded-lg bg-[#f2f7f2] px-2.5 py-1.5 text-[10px] font-extrabold text-[#43865c]">{Math.round(done / group.items.length * 100)}%</span></div>
                   <div className="space-y-1.5">
                     {group.items.map(([id, label]) => <label key={id} className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition ${checkedItems[id] ? "border-[#dcebe0] bg-[#f3faf4]" : "border-[#f0eee8] bg-[#fcfbf8] hover:border-[#d7e6dc]"}`}>
@@ -256,7 +293,7 @@ function Index() {
               <span className="rounded-xl bg-[#fff0df] px-3 py-2 text-xs font-extrabold text-[#b96f36]">03 abertas</span>
             </div>
             <div className="space-y-2.5">
-              {pending.map((item) => <div key={item.title} className="group flex items-center gap-3 rounded-2xl border border-[#f0eee8] bg-[#fcfbf8] p-3 transition hover:border-[#d7e6dc] hover:bg-[#f8fbf7]">
+              {pending.map((item) => <button type="button" key={item.title} onClick={() => { if (item.tag === "Prioridade") setActiveSection("Carro alugado"); else if (item.tag === "Passeio") setActiveSection("Tábua de marés"); else { setFocusChildChecklist(true); setActiveSection("Checklist"); } }} className="group flex w-full items-center gap-3 rounded-2xl border border-[#f0eee8] bg-[#fcfbf8] p-3 text-left transition hover:border-[#d7e6dc] hover:bg-[#f8fbf7] focus:outline-none focus:ring-2 focus:ring-[#32958a]">
                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${item.color === "coral" ? "bg-[#fff0e8] text-[#d87954]" : item.color === "blue" ? "bg-[#e8f5f5] text-[#278d91]" : "bg-[#fff5dc] text-[#c18b35]"}`}><ClipboardCheck size={18} /></span>
                 <div className="min-w-0 flex-1"><p className="truncate text-[13px] font-bold text-[#284744]">{item.title}</p><p className="mt-1 truncate text-[11px] text-[#89968d]">{item.detail}</p></div>
                 <span className="hidden rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-[#9b8c76] sm:inline">{item.tag}</span>
