@@ -37,11 +37,18 @@ const itinerary = [
   { date: "16", month: "FEV", day: "Terça", title: "Dia em Muro Alto", detail: "Mar calmo e tempo para relaxar", icon: Umbrella, tone: "green" },
 ];
 
+const checklistGroups = [{"title":"Roupas — adultos","icon":"👕","items":[["adult-swim","Roupas de banho (maiô, biquíni ou sunga)"],["adult-beach","Saídas de praia e roupas leves para usar na praia"],["adult-day","Camisetas, regatas e blusas leves para o dia a dia"],["adult-shorts","Shorts, bermudas, vestidos e roupas confortáveis"],["adult-night","Roupas para jantar e passeios à noite"],["adult-underwear","Roupas íntimas e meias"],["adult-sleep","Pijamas e roupa confortável para dormir"],["adult-shoes","Chinelos, sandálias e um calçado confortável"],["adult-sport","Roupa confortável para caminhada ou passeio"],["adult-extra","Uma troca extra e uma peça leve de frio"]]},{"title":"Roupas — criança (3 anos)","icon":"🧒","items":[["child-swim","Maiôs/sungas e roupas de banho extras"],["child-uv","Camisetas com proteção UV e roupa com proteção solar"],["child-beach","Roupas leves para praia e piscina"],["child-day","Conjuntos e trocas para todos os dias (levar extras)"],["child-night","Uma ou duas opções para sair à noite"],["child-underwear","Cuecas/calcinhas e meias em quantidade extra"],["child-sleep","Pijamas"],["child-shoes","Chinelos, sandálias e calçado confortável"],["child-hat","Chapéu ou boné com proteção para o sol"],["child-towel","Toalha ou roupão infantil"]]},{"title":"Praia e piscina","icon":"🏖️","items":[["beach-towels","Toalhas de praia"],["beach-bag","Bolsa ou mochila de praia"],["beach-sunscreen","Protetor solar adequado para adultos"],["beach-kid-sunscreen","Protetor solar infantil adequado à idade"],["beach-after","Pós-sol ou hidratante"],["beach-hats","Bonés, chapéus e óculos de sol"],["beach-shade","Canga ou esteira"],["beach-water","Garrafas de água reutilizáveis"],["beach-toys","Brinquedos de praia para a criança"],["beach-wet","Sacola para roupas molhadas e saco impermeável para eletrônicos"]]},{"title":"Higiene e cuidados pessoais","icon":"🧴","items":[["care-tooth","Escovas, creme dental e fio dental"],["care-bath","Shampoo, condicionador e sabonete"],["care-deo","Desodorante e itens de cuidados pessoais"],["care-hair","Pente/escova e acessórios de cabelo"],["care-skin","Hidratante e protetor labial"],["care-repel","Repelente adequado para adultos e criança"],["care-wipes","Lenços umedecidos e lenços de papel"],["care-diaper","Fraldas ou itens de desfralde, se ainda utilizar"],["care-bag","Necessaire e organizadores de mala"]]},{"title":"Saúde e conforto da criança","icon":"🩹","items":[["kid-meds","Medicamentos de uso habitual e receitas, se houver"],["kid-thermo","Termômetro"],["kid-firstaid","Itens básicos de primeiros socorros"],["kid-comfort","Objeto de conforto para dormir (naninha ou brinquedo)"],["kid-snacks","Copos, talheres infantis e lanchinhos para o trajeto"],["kid-car-seat","Confirmar cadeirinha infantil adequada no carro alugado"]]},{"title":"Documentos, eletrônicos e viagem","icon":"🎒","items":[["trip-docs","Documentos de identificação de todos"],["trip-child-docs","Documentos da criança e autorização, se necessária"],["trip-bookings","Comprovantes de voos e hospedagem"],["trip-car","Reserva do carro, CNH do condutor e cartão exigido pela locadora"],["trip-chargers","Celulares e carregadores"],["trip-power","Power bank e adaptadores, se necessário"],["trip-headphones","Fones de ouvido e entretenimento para o trajeto"],["trip-bags","Malas, mochilas e etiquetas de identificação"],["trip-glasses","Óculos de grau/lentes e estojo, se utilizarem"]]}] as const;
+
+
 function Index() {
   const [darkMode, setDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState("Visão geral");
   const [travelMoneyGoal, setTravelMoneyGoal] = useState(5500);
   const [savedMoney, setSavedMoney] = useState(0);
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const checklistTotal = checklistGroups.reduce((total, group) => total + group.items.length, 0);
+  const checklistDone = Object.values(checkedItems).filter(Boolean).length;
+  const checklistProgress = checklistTotal ? Math.round((checklistDone / checklistTotal) * 100) : 0;
   const remainingMoney = Math.max(0, travelMoneyGoal - savedMoney);
   const savingsProgress = travelMoneyGoal > 0 ? Math.min(100, (savedMoney / travelMoneyGoal) * 100) : 0;
   const money = (value:number) => value.toLocaleString("pt-BR", {style:"currency",currency:"BRL"});
@@ -103,6 +110,34 @@ function Index() {
             </section>
             <section className="rounded-[26px] border border-[#dcebe0] bg-[#f5faf4] p-5 sm:p-6"><div className="flex items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e1f1e5] text-[#43865c]"><PiggyBank size={20}/></span><div><h3 className="text-sm font-extrabold text-[#31564b]">Um passo de cada vez</h3><p className="mt-1 text-xs leading-5 text-[#718779]">Defina a meta de quanto pretendem levar e atualize o valor guardado sempre que separarem dinheiro para a viagem. O valor restante e o progresso são calculados automaticamente.</p></div></div></section>
             <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Os valores são editáveis nesta tela, mas ainda ficam apenas nesta sessão do navegador. A gravação permanente e a sincronização serão implementadas na etapa de persistência.</p>
+          </div>
+
+        ) : activeSection === "Checklist" ? (
+          <div className="space-y-6">
+            <section className="rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
+              <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+                <div><span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><ClipboardCheck size={13}/> Preparativos da viagem</span><h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Tudo pronto para fazer as malas?</h2><p className="mt-2 max-w-xl text-sm leading-6 text-[#d9f1e8]">Confira roupas, itens de praia, cuidados da criança e documentos. Marque o que já compraram ou já têm.</p></div>
+                <div className="rounded-2xl border border-white/20 bg-[#064f55]/35 p-4 sm:min-w-[190px]"><p className="text-[10px] font-bold uppercase tracking-wider text-[#c6eee1]">Preparativos resolvidos</p><p className="mt-1 text-3xl font-black">{checklistDone}<span className="text-base font-semibold text-[#c6eee1]"> / {checklistTotal}</span></p><p className="mt-1 text-xs text-[#d9f1e8]">{checklistProgress}% concluído</p></div>
+              </div>
+              <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-[#ffd18b] transition-all duration-300" style={{width:`${checklistProgress}%`}}/></div>
+            </section>
+            <div className="flex flex-wrap items-center justify-between gap-2 px-1"><div><h3 className="text-lg font-extrabold text-[#234442]">Lista de compras e organização</h3><p className="mt-1 text-xs text-[#89968d]">Totalmente marcável — desmarque se precisar voltar a comprar ou separar.</p></div><span className="rounded-full bg-[#e6f5f2] px-3 py-1.5 text-xs font-bold text-[#258b86]">{checklistTotal - checklistDone} pendentes</span></div>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              {checklistGroups.map((group) => {
+                const done = group.items.filter(([id]) => checkedItems[id]).length;
+                return <section key={group.title} className="rounded-[24px] border border-[#eae4d8] bg-white p-5 shadow-sm sm:p-6">
+                  <div className="mb-4 flex items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e6f5f2] text-xl">{group.icon}</span><div><h3 className="text-sm font-extrabold text-[#234442]">{group.title}</h3><p className="mt-1 text-[10px] text-[#89968d]">{done} de {group.items.length} resolvidos</p></div></div><span className="rounded-lg bg-[#f2f7f2] px-2.5 py-1.5 text-[10px] font-extrabold text-[#43865c]">{Math.round(done / group.items.length * 100)}%</span></div>
+                  <div className="space-y-1.5">
+                    {group.items.map(([id, label]) => <label key={id} className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition ${checkedItems[id] ? "border-[#dcebe0] bg-[#f3faf4]" : "border-[#f0eee8] bg-[#fcfbf8] hover:border-[#d7e6dc]"}`}>
+                      <input type="checkbox" checked={!!checkedItems[id]} onChange={(event)=>setCheckedItems((current)=>({...current,[id]:event.target.checked}))} className="mt-0.5 h-4 w-4 shrink-0 accent-[#16847e]" />
+                      <span className={`text-xs leading-5 ${checkedItems[id] ? "font-medium text-[#789084] line-through" : "font-semibold text-[#36534b]"}`}>{label}</span>
+                      {checkedItems[id] && <Check size={15} className="ml-auto mt-0.5 shrink-0 text-[#43865c]"/>}
+                    </label>)}
+                  </div>
+                </section>;
+              })}
+            </div>
+            <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Dica: a lista é uma base completa para 3 adultos e uma criança de 3 anos. Ajustem as quantidades conforme a duração, o que já têm em casa e as regras da companhia aérea. Por enquanto, as marcações ficam nesta sessão do navegador; a sincronização será feita na etapa de persistência.</p>
           </div>
         ) : activeSection === "Visão geral" ? (
           <>
