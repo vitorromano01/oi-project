@@ -14,8 +14,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Organize os detalhes da sua viagem em um só lugar." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" | "passeios" } =>
-    search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "passeios" ? { aba: search["aba"] as "restaurantes" | "praias" | "passeios" } : {},
+  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" | "passeios" | "lojinhas" } =>
+    search["aba"] === "restaurantes" || search["aba"] === "praias" || search["aba"] === "passeios" || search["aba"] === "lojinhas" ? { aba: search["aba"] as "restaurantes" | "praias" | "passeios" | "lojinhas" } : {},
   component: Index,
 });
 
@@ -143,6 +143,13 @@ function Index() {
               </div>
               <ToursPanel />
             </div>
+          ) : aba === "lojinhas" ? (
+            <div className="space-y-6">
+              <div className="px-1">
+                <Link to="/" search={{}} className="inline-flex items-center gap-1.5 rounded-xl border border-[#e5dfd2] bg-white px-3 py-2 text-xs font-bold text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><ChevronLeft size={15} /> Voltar para Dicas</Link>
+              </div>
+              <CafesAndShopsPanel />
+            </div>
           ) : (
           <div className="space-y-6">
             <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-8">
@@ -173,11 +180,8 @@ function Index() {
                   <div className="mt-4 flex items-center justify-between border-t border-[#f0eee8] pt-3"><span className="text-[10px] font-bold text-[#9aa49b]">{category.count}</span><span className="text-[#32958a]"><ArrowUpRight size={16}/></span></div>
                   </>
                 );
-                if (category.title === "Restaurantes" || category.title === "Praias e piscinas" || category.title === "Passeios") {
-                  const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : "passeios";
-                  return <Link key={category.title} to="/" search={{ aba: targetTab }} className={cardClass}>{cardBody}</Link>;
-                }
-                return <section key={category.title} className={cardClass}>{cardBody}</section>;
+                const targetTab = category.title === "Restaurantes" ? "restaurantes" : category.title === "Praias e piscinas" ? "praias" : category.title === "Passeios" ? "passeios" : "lojinhas";
+                return <Link key={category.title} to="/" search={{ aba: targetTab }} className={cardClass}>{cardBody}</Link>;
               })}
             </div>
 
@@ -321,6 +325,40 @@ function SummaryCard({ icon: Icon, label, value, note, tone }: { icon: typeof Wa
   </div>;
 }
 
+
+
+function CafesAndShopsPanel() {
+  const places = [
+    {name:"Café da Moeda (Coin's Coffee)",kind:"Cafeteria",rating:"4,6",reviews:"1.131 avaliações",address:"Rua Esperança, 458 – centrinho",description:"Café e brunch no calçadão, uma boa parada para espresso, sobremesas regionais e uma pausa entre os passeios.",tag:"Café e sobremesas",source:"https://www.goany.com.br/porto-de-galinhas/lugares/calcadao-centrinho-da-vila"},
+    {name:"Porto Café e Delícias",kind:"Cafeteria",rating:"4,8",reviews:"1.192 avaliações",address:"Rua Esperança, 36 – centrinho",description:"Cafeteria bastante elogiada, com opções de café da manhã, tapiocas, cuscuz e bolos.",tag:"Café da manhã regional",source:"https://www.hoteis.com/go/brasil/br-lugares-para-fazer-compras-em-porto-de-galinhas"},
+    {name:"Devaneio Cafés & Presentes",kind:"Café e loja de presentes",rating:"4,9",reviews:"161 avaliações",address:"Galeria do Calçadão – Praça Quatro",description:"Une cafeteria e loja de presentes, com itens e acessórios ligados ao universo do café. Boa opção para tomar algo e olhar lembranças.",tag:"Café + presentes",source:"https://www.hoteis.com/go/brasil/br-lugares-para-fazer-compras-em-porto-de-galinhas"},
+    {name:"Casa das Cores Ateliê",kind:"Artesanato e decoração",rating:"5,0",reviews:"1 avaliação",address:"Galeria Verde Mar, loja 15 – Rua das Piscinas Naturais",description:"Ateliê familiar com peças autorais, cerâmicas, porcelanas e lembranças feitas com identidade pernambucana.",tag:"Artesanato autoral",source:"https://www.goany.com.br/porto-de-galinhas/lugares/casa-das-cores-atelie"},
+    {name:"Loja Curti Porto de Galinhas",kind:"Lembranças e presentes",rating:"4,6",reviews:"52 avaliações",address:"Rua Beijupirá, 220",description:"Loja de souvenirs e presentes, com opções personalizadas para levar uma recordação da viagem.",tag:"Presentes e souvenirs",source:"https://www.goany.com.br/porto-de-galinhas/lugares/feira-de-artesanato-de-porto-de-galinhas"},
+    {name:"Cabana Tropical",kind:"Moda praia e acessórios",rating:"5,0",reviews:"61 avaliações",address:"Rua Esperança – centrinho",description:"Loja de roupas e acessórios com estilo praiano, incluindo peças de verão, bolsas e chapéus.",tag:"Moda praia",source:"https://www.hoteis.com/go/brasil/br-lugares-para-fazer-compras-em-porto-de-galinhas"},
+    {name:"Canekaria",kind:"Presentes e artigos para casa",rating:"4,2",reviews:"65 avaliações",address:"Galeria Paraoby, loja 7 – Rua Beijupirá",description:"Loja de presentes, objetos decorativos e lembrancinhas criativas para quem gosta de garimpar algo diferente.",tag:"Presentes criativos",source:"https://www.grupodicas.com/6-melhores-lugares-para-ir-as-compras-em-porto-de-galinhas/"},
+    {name:"Feira de Artesanato de Porto de Galinhas",kind:"Feirinha e artesanato local",rating:"4,2",reviews:"144 avaliações",address:"Rua Beijupirá, próximo ao letreiro da vila",description:"Parada clássica para encontrar galinhas decorativas, bolsas, chapéus, roupas de praia, chaveiros e outras lembranças. Costuma ganhar movimento no fim da tarde e à noite.",tag:"Passeio pelo centrinho",source:"https://www.goany.com.br/porto-de-galinhas/lugares/feira-de-artesanato-de-porto-de-galinhas"}
+  ];
+  return (
+    <>
+      <section className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-7">
+        <div className="relative z-10 max-w-2xl"><span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Coffee size={13}/> Cafés e lojinhas</span><h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">Pequenos achados pelo centrinho</h2><p className="mt-2 text-sm leading-6 text-[#d9f1e8]">Cafés para fazer uma pausa e lojas para encontrar lembranças, artesanato e itens de praia. Todas as sugestões ficam na região central de Porto de Galinhas e podem ser visitadas a pé.</p></div>
+      </section>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {places.map((place,index) => (
+          <article key={place.name} className="rounded-[23px] border border-[#eae4d8] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex items-start justify-between gap-3"><div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">{place.kind}</span><h3 className="mt-1 text-base font-extrabold text-[#234442]">{place.name}</h3></div><span className="shrink-0 rounded-xl bg-[#fff4df] px-2.5 py-1.5 text-xs font-extrabold text-[#a8742d]">★ {place.rating}/5</span></div>
+            <p className="mt-3 text-xs leading-5 text-[#788b80]">{place.description}</p>
+            <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>{place.address}</div>
+            <p className="mt-2 text-[10px] text-[#9aa399]">{place.reviews} · avaliação pública consultada na pesquisa</p>
+            <div className="mt-4 flex flex-wrap gap-2"><a href={"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(place.name+" Porto de Galinhas")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-xl bg-[#e6f5f2] px-3 py-2 text-xs font-bold text-[#258b86] hover:bg-[#d9efea]">Ver no mapa <MapPinned size={13}/></a><a href={place.source} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-xl border border-[#e8eee8] px-3 py-2 text-xs font-bold text-[#526b60] hover:bg-[#f7faf7]">Fonte <ArrowUpRight size={13}/></a></div>
+            <span className="mt-3 inline-flex rounded-full bg-[#edf7f2] px-2.5 py-1 text-[10px] font-bold text-[#43816e]">{place.tag}</span>
+          </article>
+        ))}
+      </div>
+      <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Seleção inicial com 8 sugestões. Endereços, horários e avaliações podem mudar; confirme o funcionamento antes de sair. As notas e quantidades de avaliações são referências consultadas durante a pesquisa, não garantias de qualidade ou parceria comercial.</p>
+    </>
+  );
+}
 
 function ToursPanel() {
   const tours = [
