@@ -4,7 +4,7 @@ import {
   ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronRight,
   CircleDollarSign, Clock3, Compass, Luggage, MapPin, Palmtree,
   Plane, Sparkles, Users, Wallet, Waves, ClipboardCheck, Sun,
-  Camera, Umbrella, Menu, MoreHorizontal, Moon,
+  Camera, Umbrella, Menu, MoreHorizontal, Moon, PiggyBank,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
