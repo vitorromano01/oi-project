@@ -14,8 +14,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Organize os detalhes da sua viagem em um só lugar." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" } =>
-    search["aba"] === "restaurantes" ? { aba: "restaurantes" } : {},
+  validateSearch: (search: Record<string, unknown>): { aba?: "restaurantes" | "praias" } =>
+    search["aba"] === "restaurantes" || search["aba"] === "praias" ? { aba: search["aba"] as "restaurantes" | "praias" } : {},
   component: Index,
 });
 
@@ -121,13 +121,20 @@ function Index() {
             <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Os valores são editáveis nesta tela, mas ainda ficam apenas nesta sessão do navegador. A gravação permanente e a sincronização serão implementadas na etapa de persistência.</p>
           </div>
 
-        ) : activeSection === "Dicas" ? (
+         ) : activeSection === "Dicas" ? (
           aba === "restaurantes" ? (
             <div className="space-y-6">
               <div className="px-1">
                 <Link to="/" search={{}} className="inline-flex items-center gap-1.5 rounded-xl border border-[#e5dfd2] bg-white px-3 py-2 text-xs font-bold text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><ChevronLeft size={15} /> Voltar para Dicas</Link>
               </div>
               <RestaurantsPanel />
+            </div>
+          ) : aba === "praias" ? (
+            <div className="space-y-6">
+              <div className="px-1">
+                <Link to="/" search={{}} className="inline-flex items-center gap-1.5 rounded-xl border border-[#e5dfd2] bg-white px-3 py-2 text-xs font-bold text-[#49635b] transition hover:-translate-y-0.5 hover:shadow-md"><ChevronLeft size={15} /> Voltar para Dicas</Link>
+              </div>
+              <BeachesPanel />
             </div>
           ) : (
           <div className="space-y-6">
@@ -159,8 +166,8 @@ function Index() {
                   <div className="mt-4 flex items-center justify-between border-t border-[#f0eee8] pt-3"><span className="text-[10px] font-bold text-[#9aa49b]">{category.count}</span><span className="text-[#32958a]"><ArrowUpRight size={16}/></span></div>
                   </>
                 );
-                if (category.title === "Restaurantes") {
-                  return <Link key={category.title} to="/" search={{ aba: "restaurantes" }} className={cardClass}>{cardBody}</Link>;
+                if (category.title === "Restaurantes" || category.title === "Praias e piscinas") {
+                  return <Link key={category.title} to="/" search={{ aba: category.title === "Restaurantes" ? "restaurantes" : "praias" }} className={cardClass}>{cardBody}</Link>;
                 }
                 return <section key={category.title} className={cardClass}>{cardBody}</section>;
               })}
@@ -306,6 +313,39 @@ function SummaryCard({ icon: Icon, label, value, note, tone }: { icon: typeof Wa
   </div>;
 }
 
+
+function BeachesPanel() {
+  const beaches = [
+    {name:"Praia de Muro Alto",distance:"Aproximadamente 9 km da vila",description:"Mar protegido por arrecifes, formando uma enorme piscina natural. Ótima para passar várias horas na água, relaxar e aproveitar em família.",experience:"Caiaque e stand up paddle",tip:"Uma das melhores escolhas para um dia tranquilo.",image:"https://images.openai.com/static-rsc-4/uawL1TVzm9qPI7GUOCjXtgpjosxAEYt8VVUlOU9HkVp9-3vaIwRhfA9bsnLNqoji8WonicWgPdbdF1ErWFPjfAxoExoFU5wAg228HscEiiJjWcIbUknWlN1flw7D34a0UsXhG2TV2mnwY3KUJP-i2XpXnZiCKNtVepmrpuZ0B59hkyy_iKZqCjA-o7Ieu8Gi?purpose=inline",priority:true},
+    {name:"Pontal do Cupe",distance:"Perto de Porto de Galinhas",description:"Piscinas naturais próximas da areia, água clara e peixinhos, especialmente na maré baixa.",experience:"Piscinas naturais na maré baixa",tip:"Boa alternativa para curtir piscinas naturais sem depender necessariamente de jangada.",image:"https://images.openai.com/static-rsc-4/CKXMbdmouh8Vu_k1BemBdeizhKg07wCecU2naVVyPG4roGj8MtHvBdTzgRGVwe7KIE727dCy9Lbjgym4LlNGTZ4u4cqcnYyCZ0bH4DyEy9U19IeeU7kxmXmhFy4lqBZb6dajUVKS4u-COf2KLC5mf6CMRXmy8HPnw8xHah9nmLlrbPfEOy82c45cUwfd7Pn8?purpose=inline"},
+    {name:"Praia da Vila de Porto de Galinhas",distance:"Na própria vila",description:"A praia mais famosa da região, com piscinas naturais, jangadas e muitos peixinhos. Combina bem com o centrinho, restaurantes e lojas.",experience:"Piscinas naturais e jangadas",tip:"Reserve pelo menos uma manhã; costuma ficar bastante movimentada.",image:"https://images.openai.com/static-rsc-4/kkGQ-AiSsNC7K2hDbne0PcXbEZNcL-bpW3zP4wNoOykdtMey_EspDR7Kb5cQ5UXYDZzPSbc5vHWdWftXBzKjbsc082Sq8DFXEosN9hn82w0XyZTj2Y7us0MpddgrxzNvP0NazG6wuX8v75i-5NH5kI0hY3_ZdmSdWlwqopgalQdic?purpose=inline"},
+    {name:"Pontal de Maracaípe",distance:"Cerca de 3 a 4 km da vila",description:"Encontro do rio com o mar, paisagem muito bonita e clima mais tranquilo. Passeios de jangada pelo manguezal.",experience:"Pôr do sol e passeio pelo manguezal",tip:"Vale visitar principalmente no fim da tarde.",image:"https://images.openai.com/static-rsc-4/Tc5c7UqzRDGl3yA3nwkxpbIM8_KyWQW6FmmaPSQw2lsULNe1BzcF6wpaEJ0XbRHB43CLAr2bzxVan0lrLpKf3QWFybv0CYP8GV2c_EIfZrYbFF1OeMrGJT8VnNXzHBP3uYI0Sdi8NfsNRHQ_kMe7xYXXe9zhF5j-Ps8rkmqgqqQkzUsTybBOyg4u-mUijc5r?purpose=inline"},
+    {name:"Praia de Maracaípe",distance:"Aproximadamente 3 km da vila",description:"Praia extensa, com coqueiros e visual mais natural. Muito procurada por surfistas, com mar mais aberto e ondas.",experience:"Caminhada, fotos e natureza",tip:"Atenção ao banho: o mar costuma ser mais agitado.",image:"https://images.openai.com/static-rsc-4/wrEufivd91RgvRXci2JblwCyKOeX_JFAXKBw6Q3m2UJ8qi54liXYflRp8z0zeqZB1WIXsHd-Wiak0DKkhfViRK8vxT39zisFYXWjQDTCvcWyeh335emnEOo9jwS7lPd15RbyhwzLbjkRZd3hFbnjoutK5zcyQkPPWQ1dv3U0QI_5xC9Fyy9ZbD2OfIjN1T1N?purpose=inline"},
+    {name:"Praia de Serrambi",distance:"Aproximadamente 15–20 minutos de carro",description:"Mais tranquila que a praia central, com trechos protegidos por recifes e piscinas naturais.",experience:"Praia mais sossegada e piscinas naturais",tip:"Boa opção para fugir um pouco da movimentação turística.",image:"https://images.openai.com/static-rsc-4/AclWlpuo51__noefz_0ZZzkzRzvBCtZoA8voDWTM_QqIFqW2hxfxockL2gTc8RMk_mZgBQPMzyisX0z5PG2nVvBAgF8II6VN95N1K893JLqmcKW7pok1ibXurtfcbCmKP6RP-Fu1qjKThMwHgep-YZ18mX0Dz2XyWs3G87djg_Q?purpose=inline"},
+    {name:"Praia dos Carneiros",distance:"Aproximadamente 56 km de Porto de Galinhas",description:"Coqueiros, água clara e mar geralmente tranquilo. Famosa pela igrejinha de São Benedito à beira-mar, piscinas naturais e bancos de areia na maré baixa.",experience:"Passeio de catamarã e dia inteiro na praia",tip:"Um passeio de dia inteiro que vale tentar incluir no roteiro.",image:"https://images.openai.com/static-rsc-4/kOQS1BR7NMdyX50nfDq47QF8kYcr771wud9E-SoTFmj3Sx3lilxJfVSHAjNJIw8sjTpnKdCrXHlbWH6OtdOmA8QvDFkq0amRqHPD560tt2ZLx7FEbQaYENq_R1wjWsGU2uD24j-yIWrZSzX8yAnNWSRap1UlK3im7MZsWVebxVE?purpose=inline"}
+  ];
+  return (
+    <>
+      <section className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#075c62] via-[#078b8b] to-[#54b6a2] p-6 text-white shadow-lg sm:p-7">
+        <div className="relative z-10 max-w-2xl"><span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]"><Waves size={13}/> Praias e piscinas</span><h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">Sete lugares para aproveitar o litoral</h2><p className="mt-2 text-sm leading-6 text-[#d9f1e8]">Da água tranquila de Muro Alto ao pôr do sol em Maracaípe. Como vocês estarão de carro, incluí também uma opção para um passeio de dia inteiro.</p></div>
+      </section>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {beaches.map((beach,index) => (
+          <article key={beach.name} className="overflow-hidden rounded-[23px] border border-[#eae4d8] bg-white shadow-sm">
+            <div className="relative h-48 bg-[#e5f3f4] sm:h-56"><img src={beach.image} alt={beach.name} className="h-full w-full object-cover" loading="lazy"/>{beach.priority && <span className="absolute left-4 top-4 rounded-full bg-[#f5bd75] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#174649]">Sua prioridade</span>}</div>
+            <div className="p-5"><div className="flex items-start justify-between gap-3"><div><span className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#32958a]">Praia {index+1} de 7</span><h3 className="mt-1 text-lg font-extrabold text-[#234442]">{beach.name}</h3></div>{beach.priority && <span className="shrink-0 text-[#d58b3d]"><Sparkles size={19}/></span>}</div>
+              <p className="mt-3 text-xs leading-5 text-[#788b80]">{beach.description}</p>
+              <div className="mt-4 flex items-center gap-2 border-t border-[#f0eee8] pt-3 text-[11px] font-semibold text-[#71847a]"><MapPin size={13} className="shrink-0 text-[#32958a]"/>{beach.distance}</div>
+              <div className="mt-3 rounded-xl bg-[#f2f8f5] px-3 py-2.5"><p className="text-[10px] font-extrabold uppercase tracking-wider text-[#43816e]">Vale pela experiência</p><p className="mt-1 text-xs font-semibold text-[#496b5c]">{beach.experience}</p></div>
+              <p className="mt-3 text-xs leading-5 text-[#7b8b80]"><span className="font-extrabold text-[#3d5c50]">Dica:</span> {beach.tip}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p className="px-1 text-[10px] leading-5 text-[#9aa399]">Distâncias e tempos são aproximados e variam conforme o ponto de saída e o trânsito. Confira a tábua de marés para planejar piscinas naturais e passeios, e observe as condições do mar e a sinalização local antes do banho.</p>
+    </>
+  );
+}
 
 function RestaurantsPanel() {
   return (
